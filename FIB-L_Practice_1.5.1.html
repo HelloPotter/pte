@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FIB-L Mastery Trainer 1.5</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 860px; margin: 40px auto; background: #ffffff; padding: 30px; border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #003366; text-align: center; border-bottom: 2px solid #003366; padding-bottom: 15px; margin-top: 0; font-size: 24px; }
+        
+        .library-section { background: #f9f9f9; padding: 15px; border: 1px dashed #ccc; margin-bottom: 20px; border-radius: 4px; }
+        .row { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
+        
+        .input-group { 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            min-height: 70px; 
+            flex: 1; 
+        }
+        .label-text { font-size: 13px; font-weight: bold; color: #003366; margin-bottom: 8px; }
+        
+        select, input[type="file"] { height: 35px; border: 1px solid #ccc; border-radius: 4px; padding: 0 5px; width: 100%; box-sizing: border-box; }
+        
+        .filter-row { font-size: 13px; color: #003366; font-weight: bold; padding-top: 5px; border-top: 1px solid #eee; display: flex; align-items: center; gap: 15px; }
+        .filter-row label { cursor: pointer; display: flex; align-items: center; gap: 4px; }
+
+        #practice-area { 
+            border: 1px solid #ddd; padding: 25px; min-height: 200px; 
+            line-height: 2.3; font-size: 19px; 
+            margin-bottom: 10px; border-radius: 4px; background: #fff; 
+        }
+        
+        .fib-input {
+            width: 150px; height: 35px; border: none; border-bottom: 2px solid #003366;
+            margin: 0 5px; text-align: center; 
+            font-size: 21px; font-weight: bold; 
+            outline: none; background: #fdfdfd; transition: 0.2s;
+        }
+        .fib-input:focus { background: #fff; border-bottom-width: 3px; }
+
+        .enter-hint { font-size: 12px; color: #999; text-align: right; margin-bottom: 15px; font-style: italic; }
+
+        #note-display { background: #fff3cd; border-left: 5px solid #ffeeba; padding: 15px; font-size: 16px; color: #856404; display: none; margin-bottom: 20px; line-height: 1.6; }
+        #note-display b { font-size: 18px; color: inherit; font-weight: bold; } 
+
+        .correct { background-color: #d4edda !important; color: #155724 !important; border-bottom-color: #28a745 !important; }
+        .wrong { background-color: #f8d7da !important; color: #721c24 !important; border-bottom-color: #dc3545 !important; }
+
+        .button-nav { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .btn { height: 38px; padding: 0 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.2s; }
+        .btn-main { background: #003366; color: white; }
+        .btn-sub { background: #6c757d; color: white; }
+        .btn-warn { background: #f0ad4e; color: white; }
+        .btn-toggle { background: #e7e7e7; color: #333; border: 1px solid #ccc; }
+        .btn-toggle.active { background: #003366; color: white; }
+        .btn-toggle:disabled { cursor: not-allowed; opacity: 0.6; }
+        
+        .copyright { text-align: center; font-size: 11px; color: #999; margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>FIB-L Mastery Trainer 1.5</h1>
+
+    <div class="library-section">
+        <div class="row">
+            <div class="input-group">
+                <span class="label-text">Load Word Bank (.txt)</span>
+                <input type="file" id="fileInput" accept=".txt">
+            </div>
+            <div class="input-group" style="flex:2">
+                <span class="label-text">Select Exercise</span>
+                <select id="topicSelector" disabled>
+                    <option>Waiting for File...</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <button class="btn btn-toggle" id="orderModeBtn" onclick="toggleOrder()">Order: Sequential</button>
+            <button class="btn btn-toggle" id="hintModeBtn" onclick="toggleHint()">Word Hint: Off</button>
+            <button class="btn btn-toggle" id="viewModeBtn" onclick="toggleView()">Hide Text: Off</button>
+            <button class="btn btn-toggle" id="readModeBtn" onclick="toggleReadMode()">Read: Missing Words</button>
+        </div>
+
+        <div class="filter-row">
+            <span>Filter by:</span>
+            <label><input type="checkbox" class="fire-cb" value="3" checked onchange="refreshDropdown()"> 🔥🔥🔥</label>
+            <label><input type="checkbox" class="fire-cb" value="2" checked onchange="refreshDropdown()"> 🔥🔥</label>
+            <label><input type="checkbox" class="fire-cb" value="1" checked onchange="refreshDropdown()"> 🔥</label>
+            <label><input type="checkbox" class="fire-cb" value="0" checked onchange="refreshDropdown()"> No Fire</label>
+        </div>
+    </div>
+
+    <div id="practice-area">Ready to Start. Please Load Your Txt File.</div>
+    <div class="enter-hint">Next: Shift+→ | Prev: Shift+← | Retry: Shift+> | Submit: Enter</div>
+    <div id="note-display"></div>
+
+    <div class="button-nav">
+        <button class="btn btn-warn" onclick="reRead()">Re-read</button>
+        <button class="btn btn-sub" onclick="tryAgain()">Try Again</button>
+        <button class="btn btn-main" onclick="checkAnswers()">Submit Answers</button>
+        <button class="btn btn-sub" onclick="goNext()">Next Question</button>
+    </div>
+
+    <div class="copyright">FIB-L Mastery Trainer 1.5 | Stone Zhao</div>
+</div>
+
+<script>
+    let masterData = [];
+    let currentFiltered = [];
+    let currentIdx = 0;
+    let isRandom = false;
+    let isHintOn = false;
+    let isHiddenMode = false;
+    let readFullText = false; 
+    let lastActiveInput = null;
+    
+    let hasPlayedFullTextForCurrent = false;
+
+    const synth = window.speechSynthesis;
+
+    function speak(text, isFullTextRequest = false, forceFullText = false) {
+        if (!text) return;
+
+        if (isFullTextRequest && hasPlayedFullTextForCurrent && !forceFullText) {
+            return;
+        }
+
+        synth.cancel();
+        
+        if (isFullTextRequest) {
+            hasPlayedFullTextForCurrent = true; 
+        }
+
+        const cleanText = isFullTextRequest ? text.replace(/[\[\]]/g, '') : text;
+        const utter = new SpeechSynthesisUtterance(cleanText);
+        const voices = synth.getVoices();
+        const targetVoice = voices.find(v => v.lang === 'en-US' && !v.name.includes('Samantha') && (v.name.includes('Zira') || v.name.includes('Google'))) || 
+                           voices.find(v => v.lang.includes('en-US') && !v.name.includes('Samantha')) || 
+                           voices[0];
+        utter.voice = targetVoice;
+        utter.rate = 1.0; 
+        
+        synth.speak(utter);
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(event) { parseContent(event.target.result); };
+        reader.readAsText(file);
+    });
+
+    function parseContent(text) {
+        masterData = [];
+        const blocks = text.split(/\n(?=#)/g);
+        blocks.forEach(block => {
+            const lines = block.trim().split('\n');
+            if (lines.length < 2) return;
+            const titleLine = lines[0].trim();
+            const fireCount = (titleLine.match(/🔥/g) || []).length;
+            
+            let noteContent = "";
+            let bodyLines = [];
+            lines.slice(1).forEach(l => {
+                if (l.trim().startsWith("Note:")) {
+                    noteContent = l.trim().replace(/\[(.*?)\]/g, "<b>[ $1 ]</b>");
+                }
+                else if (l.trim().length > 0) bodyLines.push(l.trim());
+            });
+            masterData.push({ title: titleLine, body: bodyLines.join(" "), note: noteContent, fireLevel: fireCount });
+        });
+        refreshDropdown();
+    }
+
+    function refreshDropdown() {
+        const selectedFires = Array.from(document.querySelectorAll('.fire-cb:checked')).map(cb => parseInt(cb.value));
+        currentFiltered = masterData.filter(item => selectedFires.includes(item.fireLevel));
+        const selector = document.getElementById('topicSelector');
+        selector.innerHTML = "";
+        if (currentFiltered.length === 0) {
+            selector.innerHTML = "<option>No Matches</option>";
+            selector.disabled = true;
+            document.getElementById('practice-area').innerText = "No Questions Match Your Filter.";
+            return;
+        }
+        currentFiltered.forEach((item, i) => {
+            const opt = document.createElement('option');
+            opt.value = i; opt.textContent = item.title;
+            selector.appendChild(opt);
+        });
+        selector.disabled = false;
+        loadTopic(0);
+    }
+
+    function loadTopic(idx) {
+        if (!currentFiltered[idx]) return;
+        currentIdx = idx;
+        hasPlayedFullTextForCurrent = false; 
+        const item = currentFiltered[idx];
+        const area = document.getElementById('practice-area');
+        const noteArea = document.getElementById('note-display');
+        const regex = /\[(.*?)\]/g;
+
+        if (isHiddenMode) {
+            let inputsHtml = "";
+            let match;
+            while ((match = regex.exec(item.body)) !== null) inputsHtml += createInputHtml(match[1]);
+            area.innerHTML = `<div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center; padding:30px 0;">${inputsHtml}</div>`;
+        } else {
+            area.innerHTML = item.body.replace(regex, (m, word) => createInputHtml(word));
+        }
+
+        if (item.note) { noteArea.innerHTML = item.note; noteArea.style.display = "block"; }
+        else { noteArea.style.display = "none"; }
+        document.getElementById('topicSelector').value = idx;
+
+        setTimeout(() => {
+            const firstInput = document.querySelector('.fib-input');
+            if (firstInput) firstInput.focus();
+        }, 100);
+    }
+
+    function createInputHtml(answer) {
+        const placeholder = isHintOn ? answer : "";
+        return `<input type="text" class="fib-input" data-ans="${answer}" placeholder="${placeholder}" onfocus="onInputFocus(this)" autocomplete="off" spellcheck="false">`;
+    }
+
+    function onInputFocus(el) {
+        lastActiveInput = el;
+        el.classList.remove('correct', 'wrong');
+        
+        if (readFullText) {
+            speak(currentFiltered[currentIdx].body, true);
+        } else {
+            speak(el.dataset.ans, false);
+        }
+    }
+
+    function checkAnswers() {
+        const inputs = document.querySelectorAll('.fib-input');
+        inputs.forEach(input => {
+            const userVal = input.value.trim().toLowerCase();
+            const correctVal = input.dataset.ans.trim().toLowerCase();
+            if (userVal === correctVal && userVal !== "") {
+                input.classList.add('correct');
+            } else {
+                input.classList.add('wrong');
+            }
+        });
+    }
+
+    function tryAgain() {
+        document.querySelectorAll('.fib-input').forEach(i => {
+            i.value = "";
+            i.classList.remove('correct', 'wrong');
+        });
+
+        // 修改点：在 Read: Full Text 模式下重置朗读状态并播放全文
+        if (readFullText) {
+            hasPlayedFullTextForCurrent = false;
+            speak(currentFiltered[currentIdx].body, true);
+        }
+
+        const firstInput = document.querySelector('.fib-input');
+        if (firstInput) firstInput.focus();
+    }
+
+    function reRead() {
+        if (readFullText) {
+            speak(currentFiltered[currentIdx].body, true, true);
+        } else if (lastActiveInput) {
+            speak(lastActiveInput.dataset.ans, false);
+            lastActiveInput.focus();
+        }
+    }
+
+    function goNext() {
+        if (currentFiltered.length === 0) return;
+        let next = isRandom ? Math.floor(Math.random() * currentFiltered.length) : (currentIdx + 1) % currentFiltered.length;
+        loadTopic(next);
+    }
+
+    function goPrev() {
+        if (currentFiltered.length === 0) return;
+        let prev = (currentIdx - 1 + currentFiltered.length) % currentFiltered.length;
+        loadTopic(prev);
+    }
+
+    function toggleOrder() {
+        isRandom = !isRandom;
+        document.getElementById('orderModeBtn').textContent = isRandom ? "Order: Random" : "Order: Sequential";
+        document.getElementById('orderModeBtn').classList.toggle('active', isRandom);
+    }
+
+    function toggleHint() {
+        isHintOn = !isHintOn;
+        const btn = document.getElementById('hintModeBtn');
+        btn.textContent = isHintOn ? "Word Hint: Off" : "Word Hint: Off"; 
+        btn.classList.toggle('active', isHintOn);
+        document.querySelectorAll('.fib-input').forEach(input => {
+            input.placeholder = isHintOn ? input.dataset.ans : "";
+        });
+    }
+
+    function toggleView() {
+        isHiddenMode = !isHiddenMode;
+        const viewBtn = document.getElementById('viewModeBtn');
+        const readBtn = document.getElementById('readModeBtn');
+        
+        viewBtn.textContent = isHiddenMode ? "Hide Text: On" : "Hide Text: Off";
+        viewBtn.classList.toggle('active', isHiddenMode);
+        
+        if (isHiddenMode) {
+            readFullText = false;
+            readBtn.textContent = "Read: Missing Words";
+            readBtn.classList.remove('active');
+            readBtn.disabled = true;
+        } else {
+            readBtn.disabled = false;
+        }
+        
+        loadTopic(currentIdx);
+    }
+
+    function toggleReadMode() {
+        if (isHiddenMode) return; 
+        readFullText = !readFullText;
+        if (readFullText) hasPlayedFullTextForCurrent = false;
+        
+        const btn = document.getElementById('readModeBtn');
+        btn.textContent = readFullText ? "Read: Full Text" : "Read: Missing Words";
+        btn.classList.toggle('active', readFullText);
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { 
+            checkAnswers(); 
+            return; 
+        }
+        if (e.shiftKey) {
+            if (e.key === 'ArrowRight') { 
+                e.preventDefault();
+                goNext();
+            } else if (e.key === 'ArrowLeft') { 
+                e.preventDefault();
+                goPrev();
+            } else if (e.key === '>') { 
+                e.preventDefault();
+                tryAgain();
+            }
+        }
+    });
+
+    document.getElementById('topicSelector').onchange = function() { loadTopic(parseInt(this.value)); };
+    window.speechSynthesis.getVoices();
+</script>
+</body>
+</html>
