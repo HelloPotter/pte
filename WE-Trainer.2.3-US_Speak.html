@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Write Email 5-Step Memorization Trainer 2.3</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+}
+
+.container {
+  max-width: 860px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 6px;
+  position: relative;
+}
+
+/* Library Section Styles */
+.library-section {
+  background: #f9f9f9;
+  padding: 15px;
+  border: 1px dashed #ccc;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+.library-section h3 { margin-top: 0; font-size: 16px; }
+
+#fileInput, #emailSelector {
+  height: 35px;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+#loadBtn {
+  height: 35px;
+  margin-top: 0;
+  margin-left: 10px;
+  padding: 0 18px;
+  font-size: 14px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.step { display: none; }
+.step.active { display: block; }
+
+.textarea-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+textarea {
+  width: 100%;
+  height: 420px;
+  font-size: 17px;
+  line-height: 1.6;
+  padding: 14px;
+  box-sizing: border-box;
+  display: block;
+}
+
+.instructions {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 12px;
+}
+
+/* 统一所有按钮样式 */
+button {
+  margin-top: 15px;
+  margin-right: 10px;
+  padding: 8px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #efefef;
+  border: 1px solid #767676;
+  border-radius: 2px;
+}
+
+button:hover {
+  background-color: #e5e5e5;
+}
+
+#timer {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.timer-setting {
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.word-count {
+  text-align: left;
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.result {
+  margin-top: 30px;
+  position: relative;
+}
+
+.legend {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 12px;
+  background: #fff;
+  padding: 5px;
+}
+
+.result strong {
+  font-size: 20px;
+}
+
+.missing { color: blue; font-weight: bold; }
+.wrong { color: red; font-weight: bold; }
+.extra { color: orange; font-weight: bold; }
+
+.compare-box {
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  background: #fafafa;
+  white-space: pre-wrap;
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+footer {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Write Email 5-Step Memorization Trainer 2.3</h1>
+
+<div class="library-section">
+  <h3>Email Library (.txt)</h3>
+  <input type="file" id="fileInput" accept=".txt">
+  <select id="emailSelector" style="margin-left: 10px; display:none;">
+    <option value="">-- Select an Email --</option>
+  </select>
+  <button id="loadBtn" style="display:none;" onclick="loadSelectedEmail()">Load Email</button>
+  <div style="font-size: 11px; color: #999; margin-top: 5px;">* Use "#" at the start of a line for IDs and Titles.</div>
+</div>
+
+<div class="step active" id="step1">
+<h2>Step 1: Controlled Reading</h2>
+<div class="instructions">
+Read the full email once only. Do not memorize details.<br>
+Focus on:
+<ul>
+<li>What each paragraph does</li>
+<li>How each paragraph begins</li>
+</ul>
+Paste or Load the full original text below.
+</div>
+<textarea id="originalText" placeholder="Paste or load the original email here" oninput="stopSpeaking()"></textarea>
+<button id="speakBtn" onclick="toggleSpeak()">Speak Text</button>
+<button onclick="nextStep()">Next</button>
+<button onclick="jumpToStep5()">Skip to Step 5</button>
+</div>
+
+<div class="step" id="step2">
+<h2>Step 2: Structure Encoding</h2>
+<div class="instructions">
+Without looking back at the original text:
+<ul>
+<li>What does the opening paragraph do?</li>
+<li>How many main points are in the body?</li>
+<li>What does the closing paragraph do?</li>
+</ul>
+Use notes or short phrases.
+</div>
+<textarea id="step2Text" placeholder="Describe the structure here"></textarea>
+<button onclick="prevStep()">Previous</button>
+<button onclick="nextStep()">Next</button>
+</div>
+
+<div class="step" id="step3">
+<h2>Step 3: Sentence Starters</h2>
+<div class="instructions">
+Write the first sentence (or sentence starter) of each paragraph.<br>
+Example:
+<ul>
+<li>I am writing to...</li>
+<li>Firstly, about...</li>
+<li>It would be great if...</li>
+</ul>
+</div>
+<textarea id="step3Text" placeholder="Write sentence starters for each paragraph"></textarea>
+<button onclick="prevStep()">Previous</button>
+<button onclick="nextStep()">Next</button>
+</div>
+
+<div class="step" id="step4">
+<h2>Step 4: Guided Recall</h2>
+<div class="instructions">
+Without seeing the original text:
+<ul>
+<li>Use the structure and sentence starters</li>
+<li>Write the complete email</li>
+<li>This is not timed</li>
+</ul>
+</div>
+<textarea id="step4Text" placeholder="Write the full email with guidance"></textarea>
+<button onclick="prevStep()">Previous</button>
+<button onclick="nextStep()">Next</button>
+</div>
+
+<div class="step" id="step5">
+<h2>Step 5: Full Recall</h2>
+<div class="instructions">
+Write the complete email from memory.
+<ul>
+<li>No original text</li>
+<li>Timed task (9 minutes)</li>
+<li>You may pause if needed</li>
+</ul>
+</div>
+
+<div class="timer-setting" id="timerConfig">
+  Set Timer (min): <input type="number" id="durationInput" value="9" min="1" max="60" style="width: 50px;">
+</div>
+
+<div class="textarea-wrapper">
+  <div id="timer">Remaining Time: 09:00</div>
+  <textarea id="userText" placeholder="Write the full email from memory" oninput="updateWordCount()"></textarea>
+</div>
+
+<div class="word-count">
+  Current Words: <span id="currCount">0</span> | Original Words: <span id="origCount">0</span>
+</div>
+
+<br>
+<button onclick="submitText()">Submit</button>
+<button onclick="togglePause()" id="pauseBtn">Pause</button>
+<button onclick="resetAll()">Reset</button>
+
+<div class="result" id="result"></div>
+</div>
+
+<footer>
+  Write Email 5-Step Memorization Trainer 2.3 | © Stone Zhao
+</footer>
+
+</div>
+
+<script>
+let step = 1;
+let time = 540;
+let paused = false;
+let timerStarted = false;
+let timer;
+let emailLibrary = [];
+
+// --- 朗读逻辑更新 (2.3版本) ---
+function toggleSpeak() {
+  if (window.speechSynthesis.speaking) {
+    stopSpeaking();
+  } else {
+    startSpeaking();
+  }
+}
+
+function startSpeaking() {
+  const text = document.getElementById("originalText").value;
+  if (!text) return;
+
+  // 确保开始前先清除所有任务
+  window.speechSynthesis.cancel();
+  
+  const utterance = new SpeechSynthesisUtterance(text);
+  const voices = window.speechSynthesis.getVoices();
+  
+  // 查找 Google US English 声音
+  let selectedVoice = voices.find(v => v.name.includes("Google") && v.lang === "en-US");
+  if (!selectedVoice) {
+    selectedVoice = voices.find(v => 
+      (v.lang === "en-US" || v.name.includes("US")) && 
+      (v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("david"))
+    );
+  }
+  if (!selectedVoice) selectedVoice = voices.find(v => v.lang === "en-US");
+
+  if (selectedVoice) utterance.voice = selectedVoice;
+  utterance.lang = 'en-US';
+  utterance.rate = 1.0;
+
+  // 状态处理
+  const btn = document.getElementById("speakBtn");
+  utterance.onstart = () => {
+    btn.innerText = "Stop Speaking";
+  };
+  utterance.onend = () => {
+    btn.innerText = "Speak Text";
+  };
+  utterance.onerror = () => {
+    btn.innerText = "Speak Text";
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
+
+function stopSpeaking() {
+  window.speechSynthesis.cancel();
+  const btn = document.getElementById("speakBtn");
+  if (btn) btn.innerText = "Speak Text";
+}
+
+// 语音列表预加载
+if (window.speechSynthesis.onvoiceschanged !== undefined) {
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
+
+// --- 快速跳转功能 ---
+function jumpToStep5() {
+  stopSpeaking(); // 离开页面停止朗读
+  document.getElementById("step" + step).classList.remove("active");
+  step = 5;
+  document.getElementById("step5").classList.add("active");
+  updateWordCount();
+  if (!timerStarted) initStep5Timer();
+}
+
+// --- File Library Logic ---
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const parts = e.target.result.split(/(?=^#)/m);
+    emailLibrary = parts.map(p => p.trim()).filter(p => p.length > 0);
+    const selector = document.getElementById('emailSelector');
+    selector.innerHTML = '<option value="">-- Select an Email --</option>';
+    emailLibrary.forEach((item, index) => {
+      const option = document.createElement('option');
+      option.value = index;
+      option.textContent = item.split('\n')[0].replace(/^#\s*/, '').substring(0, 50);
+      selector.appendChild(option);
+    });
+    selector.style.display = 'inline-block';
+    document.getElementById('loadBtn').style.display = 'inline-block';
+  };
+  reader.readAsText(file);
+});
+
+function loadSelectedEmail() {
+  stopSpeaking(); // 更换内容停止朗读
+  const index = document.getElementById('emailSelector').value;
+  if (index !== "") {
+    const fullText = emailLibrary[index];
+    const bodyText = fullText.split('\n').slice(1).join('\n').trim();
+    document.getElementById('originalText').value = bodyText;
+    updateWordCount();
+  }
+}
+
+// --- Training Logic ---
+function getWordCount(text) {
+  const words = text.trim().split(/\s+/);
+  return (words[0] === "" || words[0] === undefined) ? 0 : words.length;
+}
+
+function updateWordCount() {
+  const origText = document.getElementById("originalText").value;
+  const currText = document.getElementById("userText").value;
+  document.getElementById("origCount").innerText = getWordCount(origText);
+  document.getElementById("currCount").innerText = getWordCount(currText);
+}
+
+function nextStep() {
+  stopSpeaking(); // 离开页面停止朗读
+  document.getElementById("step" + step).classList.remove("active");
+  step++;
+  document.getElementById("step" + step).classList.add("active");
+  if (step === 5) {
+      updateWordCount();
+      if (!timerStarted) initStep5Timer();
+  }
+}
+
+function prevStep() {
+  document.getElementById("step" + step).classList.remove("active");
+  step--;
+  document.getElementById("step" + step).classList.add("active");
+}
+
+function initStep5Timer() {
+    const mins = parseInt(document.getElementById("durationInput").value) || 9;
+    time = Math.min(Math.max(mins, 1), 60) * 60;
+    updateTimerDisplay();
+    startTimer();
+}
+
+function updateTimerDisplay() {
+    let m = String(Math.floor(time / 60)).padStart(2, "0");
+    let s = String(time % 60).padStart(2, "0");
+    document.getElementById("timer").innerText = `Remaining Time: ${m}:${s}`;
+}
+
+function startTimer() {
+  if(timerStarted) clearInterval(timer);
+  timerStarted = true;
+  document.getElementById("timerConfig").style.display = "none";
+  timer = setInterval(() => {
+    if (paused) return;
+    time--;
+    updateTimerDisplay();
+    if (time <= 0) { clearInterval(timer); submitText(); }
+  }, 1000);
+}
+
+function togglePause() {
+  paused = !paused;
+  document.getElementById("userText").readOnly = paused;
+  document.getElementById("pauseBtn").innerText = paused ? "Resume" : "Pause";
+}
+
+function submitText() {
+  clearInterval(timer);
+  const original = document.getElementById("originalText").value;
+  const user = document.getElementById("userText").value;
+  const tokenize = (text) => text.split(/([.,!?;:]|\s+)/).filter(t => t !== ""); 
+  const oTokens = tokenize(original);
+  const uTokens = tokenize(user);
+  const dp = Array(oTokens.length + 1).fill(null).map(() => Array(uTokens.length + 1).fill(0));
+  for (let i = 0; i <= oTokens.length; i++) dp[i][0] = i;
+  for (let j = 0; j <= uTokens.length; j++) dp[0][j] = j;
+  for (let i = 1; i <= oTokens.length; i++) {
+    for (let j = 1; j <= uTokens.length; j++) {
+      if (oTokens[i - 1] === uTokens[j - 1]) dp[i][j] = dp[i - 1][j - 1];
+      else dp[i][j] = Math.min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]) + 1;
+    }
+  }
+  let i = oTokens.length, j = uTokens.length, finalOutput = "", correctCount = 0;
+  let totalOriginalWords = oTokens.filter(t => /\w+/.test(t)).length;
+  const wrap = (content, className) => `<span class="${className}">[${content}]</span>`;
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && oTokens[i - 1] === uTokens[j - 1]) {
+      finalOutput = oTokens[i - 1] + finalOutput;
+      if(/\w+/.test(oTokens[i-1])) correctCount++;
+      i--; j--;
+    } else if (i > 0 && j > 0 && dp[i][j] === dp[i - 1][j - 1] + 1) {
+      finalOutput = wrap(uTokens[j - 1], "wrong") + finalOutput;
+      i--; j--;
+    } else if (i > 0 && dp[i][j] === dp[i - 1][j] + 1) {
+      finalOutput = (/\S/.test(oTokens[i-1]) ? wrap(oTokens[i-1], "missing") : oTokens[i-1]) + finalOutput;
+      i--;
+    } else {
+      finalOutput = (/\S/.test(uTokens[j-1]) ? wrap(uTokens[j-1], "extra") : uTokens[j-1]) + finalOutput;
+      j--;
+    }
+  }
+  const score = totalOriginalWords > 0 ? Math.round((correctCount / totalOriginalWords) * 100) : 0;
+  const legendHtml = `<div class="legend"><span class="wrong">[Red]</span>, Wrong Content &nbsp;&nbsp; <span class="missing">[Blue]</span>, Missing Content &nbsp;&nbsp; <span class="extra">[Orange]</span>, Extra Content</div>`;
+  document.getElementById("result").innerHTML = `${legendHtml}<strong>Completion Rate: ${score}%</strong><div class="compare-box">${finalOutput}</div>`;
+}
+
+function resetAll() {
+  stopSpeaking();
+  document.getElementById("step2Text").value = ""; 
+  document.getElementById("step3Text").value = "";
+  document.getElementById("step4Text").value = ""; 
+  document.getElementById("userText").value = "";
+  document.getElementById("result").innerHTML = ""; 
+  clearInterval(timer);
+  timerStarted = false; 
+  paused = false; 
+  document.getElementById("userText").readOnly = false;
+  document.getElementById("pauseBtn").innerText = "Pause"; 
+  document.getElementById("timerConfig").style.display = "block";
+  document.getElementById("step" + step).classList.remove("active"); 
+  step = 1;
+  document.getElementById("step1").classList.add("active"); 
+  updateWordCount();
+}
+
+// 刷新或关闭页面时停止所有朗读任务
+window.onbeforeunload = function() {
+  window.speechSynthesis.cancel();
+};
+</script>
+</body>
+</html>
