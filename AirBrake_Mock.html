@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Air Brake Practice System</title>
+    <title>Air Brake Knowledge Practice</title>
     <style>
         :root {
             --primary-color: #1a73e8;
@@ -11,12 +11,12 @@
             --success-bg: #e6f4ea;
             --success-text: #137333;
             --error-bg: #fce8e6;
-            --error-text: rgb(175, 0, 0);
+            --error-text: #a50e0e;
             --bg-body: #f5f7f9;
             --text-main: #202124;
             --text-sub: #5f6368;
             --shadow-sm: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
-            --fixed-width: 900px;
+            --fixed-width: 800px;
         }
 
         body { 
@@ -31,7 +31,6 @@
             min-height: 100vh;
         }
 
-        /* 居中标题与图标结合 */
         .header-section {
             display: flex;
             align-items: center;
@@ -68,7 +67,6 @@
             flex: 1; 
         }
 
-        /* 窄卡片控制栏 */
         .control-panel {
             background: #ffffff;
             border-radius: 8px;
@@ -97,11 +95,10 @@
             font-weight: 700;
         }
 
-        /* 答题卡片 */
         .card {
             background: #ffffff;
             border-radius: 12px;
-            padding: 24px;
+            padding: 48px;
             box-shadow: var(--shadow-sm);
             box-sizing: border-box;
             width: 100%;
@@ -122,7 +119,6 @@
             line-height: 1.4;
         }
 
-        /* 选项 */
         .options { list-style: none; padding: 0; margin-bottom: 0; }
         .option-item { 
             border: 1px solid #dadce0; 
@@ -140,7 +136,6 @@
         .option-item.wrong { background-color: var(--error-bg); border-color: #d93025; color: var(--error-text); }
         .option-item.disabled { pointer-events: none; }
 
-        /* 反馈 */
         .feedback-panel { 
             margin-top: 24px; 
             padding: 24px; 
@@ -155,7 +150,24 @@
         .feedback-label { color: var(--text-sub); font-size: 0.85rem; font-weight: 600; margin-top: 12px; display: block; }
         .feedback-content { color: var(--text-main); font-size: 0.95rem; margin-top: 4px; }
 
-        /* 按钮 */
+        /* Review Page Specific Styling */
+        .review-item {
+            padding: 24px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .review-item:last-child { border-bottom: none; }
+        .review-q-text { font-weight: 600; font-size: 1.1rem; margin-bottom: 12px; color: var(--text-main); }
+        .review-ans-row { 
+            margin-bottom: 8px; 
+            padding: 10px 15px; 
+            border-radius: 6px; 
+            font-size: 0.95rem;
+        }
+        .review-correct { background-color: var(--success-bg); color: var(--success-text); border-left: 4px solid #34a853; }
+        .review-wrong { background-color: var(--error-bg); color: var(--error-text); border-left: 4px solid #d93025; }
+        .review-meta-label { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: var(--text-sub); margin-top: 12px; display: block; }
+        .review-meta-content { font-size: 0.95rem; color: var(--text-main); margin-top: 4px; }
+
         .btn-group { display: flex; gap: 8px; }
         button { 
             border: none; padding: 10px 20px; font-size: 0.9rem; font-weight: 500; 
@@ -166,7 +178,6 @@
         .btn-ghost { background-color: transparent; border: 1px solid #dadce0; color: var(--text-sub); }
         .btn-ghost:hover { background-color: #f1f3f4; color: var(--text-main); }
 
-        /* 底部 */
         footer {
             text-align: center;
             padding: 30px;
@@ -177,12 +188,9 @@
             margin-top: auto;
         }
 
-        .wrong-card { background: white; padding: 24px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #dadce0; }
-
         @media (max-width: 840px) {
             .container { width: 95%; }
             .card { padding: 30px; }
-            .header-section { margin: 20px 0; }
         }
     </style>
 </head>
@@ -190,7 +198,7 @@
 
 <header class="header-section">
     <div class="brand-icon">AB</div>
-    <h1 class="main-title">Air Brake Practice</h1>
+    <h1 class="main-title">Air Brake Knowledge Test Practice 7.0</h1>
 </header>
 
 <div class="container">
@@ -235,18 +243,19 @@
     </div>
 
     <div id="reviewScreen" style="display:none;" class="card">
-        <h2 style="margin-top:0; margin-bottom:24px; border-bottom:1px solid #eee; padding-bottom:16px">Test Review</h2>
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom:1px solid #eee; padding-bottom:16px">
+            <h2 style="margin:0">Test Review</h2>
+            <button onclick="restartSim()" class="btn-main">New Test</button>
+        </div>
         <div id="reviewList"></div>
-        <button onclick="restartSim()" class="btn-main" style="margin-top:20px">New Test</button>
     </div>
 </div>
 
 <footer>
-    &copy; 2026 Air Brake Practice. All rights reserved. Designed by Stone Zhao.
+    © 2026 Air Brake Knowledge Test Practice. All rights reserved. Designed by Stone Zhao.
 </footer>
 
 <script>
-// 题库数据占位
 const rawData = `
 #R1-1 What devices introduce a small amount of alcohol vapour into the air system?
 a) Air dryers
@@ -1820,6 +1829,9 @@ d) No, it must be repaired first
 [Correct Answer] 正确答案： d)
 [Explain] 解释：BC 省法规严禁驾驶带有 Defective（有缺陷/故障）制动部件的车辆上路，必须修复后方可行驶。
 [Page] 参考手册页码：168
+
+
+
 `;
 
 let allQuestions = [];
@@ -1936,8 +1948,8 @@ function nextQuestion() {
         currentIdx++; renderQuestion();
     } else {
         if (isWrongPracticeMode) {
-            alert("Practice complete. Clearing correct questions from bank.");
-            wrongBank = []; saveBank(); showWrongBank();
+            alert("Practice complete.");
+            showWrongBank();
         } else { finishQuiz(); }
     }
 }
@@ -1954,12 +1966,42 @@ function finishQuiz() {
     document.getElementById('scoreDetail').innerText = `Your score is ${score}%. (${correctCount} out of 25)`;
 }
 
+// Updated showReview function
+function showReview() {
+    document.getElementById('resultScreen').style.display = 'none';
+    document.getElementById('reviewScreen').style.display = 'block';
+    let html = "";
+    quizQuestions.forEach((q, idx) => {
+        const userAns = userAnswers.find(a => a.qIndex === idx);
+        const correctOptionText = q.options.find(opt => opt.startsWith(q.ans));
+        
+        html += `
+            <div class="review-item">
+                <div class="review-q-text">${idx + 1}. ${q.q}</div>
+                
+                <div class="review-ans-row ${userAns?.isCorrect ? 'review-correct' : 'review-wrong'}">
+                    <strong>Your Answer:</strong> ${userAns ? userAns.choice : 'Skipped'}
+                </div>
+
+                <div class="review-ans-row review-correct">
+                    <strong>Correct Answer:</strong> [${q.ans}] - ${correctOptionText}
+                </div>
+
+                <span class="review-meta-label">Explanation</span>
+                <div class="review-meta-content">${q.explain}</div>
+
+                <span class="review-meta-label">Manual Reference</span>
+                <div class="review-meta-content">Page ${q.page}</div>
+            </div>`;
+    });
+    document.getElementById('reviewList').innerHTML = html;
+}
+
 function showWrongBank() {
     document.getElementById('quizContainer').style.display = 'none';
     document.getElementById('resultScreen').style.display = 'none';
     document.getElementById('controlPanel').style.display = 'none';
     document.getElementById('wrongBankScreen').style.display = 'block';
-    document.getElementById('btnPracticeWrong').style.display = wrongBank.length > 0 ? 'inline-block' : 'none';
     let html = "";
     if (wrongBank.length === 0) {
         html = "<p style='text-align:center; padding:60px; color:var(--text-sub);'>No incorrect questions recorded yet.</p>";
@@ -1968,7 +2010,7 @@ function showWrongBank() {
             html += `
                 <div class="wrong-card">
                     <div style="font-weight:600; margin-bottom:12px;">${idx+1}. ${q.q}</div>
-                    <div style="font-size:0.85rem; color:var(--success-text); margin-bottom:10px; font-weight:600;">Correct Answer: ${q.ans} | ID: ${q.code}</div>
+                    <div style="font-size:0.85rem; color:var(--success-text); margin-bottom:10px; font-weight:600;">Correct Answer: ${q.ans}</div>
                     <div style="font-size:0.9rem; padding-top:10px; border-top:1px solid #f1f3f4;">${q.explain}</div>
                     <button onclick="removeFromBank('${q.code}')" class="btn-ghost" style="margin-top:16px; padding:6px 14px; font-size:0.8rem;">Remove</button>
                 </div>`;
@@ -1993,27 +2035,10 @@ function skipQuestion() {
     renderQuestion();
 }
 
-function showReview() {
-    document.getElementById('resultScreen').style.display = 'none';
-    document.getElementById('reviewScreen').style.display = 'block';
-    let html = "";
-    quizQuestions.forEach((q, idx) => {
-        const userAns = userAnswers.find(a => a.qIndex === idx);
-        html += `
-            <div style="padding:16px 0; border-bottom:1px solid #f1f3f4;">
-                <div style="font-weight:500;">${idx+1}. ${q.q}</div>
-                <div style="font-size:0.9rem; margin-top:4px; color:${userAns?.isCorrect ? 'var(--success-text)' : 'var(--error-text)'}">
-                    Your choice: ${userAns ? userAns.choice : 'Skipped'} | Correct: ${q.ans}
-                </div>
-            </div>`;
-    });
-    document.getElementById('reviewList').innerHTML = html;
-}
-
 function removeFromBank(code) { wrongBank = wrongBank.filter(w => w.code !== code); saveBank(); showWrongBank(); }
 function saveBank() { localStorage.setItem('airBrakeWrongBank', JSON.stringify(wrongBank)); }
 function hideWrongBank() { document.getElementById('wrongBankScreen').style.display = 'none'; startSession(); }
-function restartSim() { if (confirm("Start a new test? Current progress will be lost.")) initQuiz(); }
+function restartSim() { if (confirm("Start a new test?")) initQuiz(); }
 
 parseData();
 initQuiz();
