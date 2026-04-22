@@ -1,1889 +1,2203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Air Brake Knowledge Practice</title>
-    <style>
-        :root {
-            --primary-color: #1a73e8;
-            --primary-hover: #1557b0;
-            --success-bg: #e6f4ea;
-            --success-text: #137333;
-            --error-bg: #fce8e6;
-            --error-text: #a50e0e;
-            --bg-body: #f5f7f9;
-            --text-main: #202124;
-            --text-sub: #5f6368;
-            --shadow-sm: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
-            --fixed-width: 800px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Air Brake Knowledge Practice</title>
+  <style>
+    :root {
+      --primary-color: #1a73e8;
+      --primary-hover: #1557b0;
+      --success-bg: #e6f4ea;
+      --success-text: #137333;
+      --error-bg: #fce8e6;
+      --error-text: #a50e0e;
+      --bg-body: #f5f7f9;
+      --text-main: #202124;
+      --text-sub: #5f6368;
+      --shadow-sm: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+      --fixed-width: 900px;
+    }
 
-        body { 
-            background-color: var(--bg-body); 
-            color: var(--text-main); 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            margin: 0; 
-            padding: 0;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-        .header-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin: 40px 0 20px;
-        }
+    .header-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin: 40px 0 20px;
+    }
 
-        .brand-icon {
-            background: var(--primary-color);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: 0 2px 4px rgba(26,115,232,0.3);
-        }
+    .brand-icon {
+      background: var(--primary-color);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 4px rgba(26,115,232,0.3);
+    }
 
-        .main-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin: 0;
-            color: var(--text-main);
-        }
+    .main-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin: 0;
+      color: var(--text-main);
+    }
 
-        .container { 
-            width: var(--fixed-width); 
-            margin: 0 auto; 
-            padding: 0 0 60px; 
-            flex: 1; 
-        }
+    .container {
+      width: var(--fixed-width);
+      margin: 0 auto;
+      padding: 0 0 60px;
+      flex: 1;
+    }
 
-        .control-panel {
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 12px 24px;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-sizing: border-box;
-        }
+    .control-panel {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 12px 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-sizing: border-box;
+    }
 
-        .status-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            color: var(--text-main);
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
+    .control-top, .control-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
 
-        .timer-display {
-            color: var(--error-text);
-            font-family: monospace;
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-height: 40px;
+      flex-wrap: wrap;
+    }
 
-        .card {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 48px;
-            box-shadow: var(--shadow-sm);
-            box-sizing: border-box;
-            width: 100%;
-        }
+    .question-counter-strong {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-main);
+      white-space: nowrap;
+    }
 
-        .question-num {
-            color: var(--primary-color);
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-            display: block;
-        }
+    .bank-info-inline {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      white-space: nowrap;
+    }
 
-        .question-text {
-            font-size: 1.4rem;
-            font-weight: 500;
-            margin-bottom: 32px;
-            line-height: 1.4;
-        }
+    .timer-display {
+      color: var(--error-text);
+      font-family: monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      min-width: 80px;
+      text-align: right;
+      white-space: nowrap;
+    }
 
-        .options { list-style: none; padding: 0; margin-bottom: 0; }
-        .option-item { 
-            border: 1px solid #dadce0; 
-            padding: 18px 24px; 
-            margin-bottom: 12px; 
-            cursor: pointer; 
-            transition: all 0.2s; 
-            border-radius: 8px; 
-            font-size: 1.05rem;
-            display: flex;
-            align-items: center;
-        }
-        .option-item:hover { background-color: #f8f9fa; border-color: #bdc1c6; }
-        .option-item.correct { background-color: var(--success-bg); border-color: #34a853; color: var(--success-text); font-weight: 500; }
-        .option-item.wrong { background-color: var(--error-bg); border-color: #d93025; color: var(--error-text); }
-        .option-item.disabled { pointer-events: none; }
+    .bottom-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 2px;
+      scrollbar-width: thin;
+    }
 
-        .feedback-panel { 
-            margin-top: 24px; 
-            padding: 24px; 
-            border-radius: 8px; 
-            background-color: #f8f9fa; 
-            border-left: 4px solid var(--primary-color);
-            display: none; 
-            animation: fadeIn 0.4s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .bottom-left span {
+      color: var(--text-main);
+      font-weight: 500;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
 
-        .feedback-label { color: var(--text-sub); font-size: 0.85rem; font-weight: 600; margin-top: 12px; display: block; }
-        .feedback-content { color: var(--text-main); font-size: 0.95rem; margin-top: 4px; }
+    .mode-display-inline {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      font-weight: 500;
+      white-space: nowrap;
+      margin: 0 6px 0 2px;
+      flex: 0 0 auto;
+    }
 
-        /* Review Page Specific Styling */
-        .review-item {
-            padding: 24px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .review-item:last-child { border-bottom: none; }
-        .review-q-text { font-weight: 600; font-size: 1.1rem; margin-bottom: 12px; color: var(--text-main); }
-        .review-ans-row { 
-            margin-bottom: 8px; 
-            padding: 10px 15px; 
-            border-radius: 6px; 
-            font-size: 0.95rem;
-        }
-        .review-correct { background-color: var(--success-bg); color: var(--success-text); border-left: 4px solid #34a853; }
-        .review-wrong { background-color: var(--error-bg); color: var(--error-text); border-left: 4px solid #d93025; }
-        .review-meta-label { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: var(--text-sub); margin-top: 12px; display: block; }
-        .review-meta-content { font-size: 0.95rem; color: var(--text-main); margin-top: 4px; }
+    .toolbar-input {
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid #dadce0;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      background: #fff;
+      box-sizing: border-box;
+      flex: 0 0 auto;
+    }
 
-        .btn-group { display: flex; gap: 8px; }
-        button { 
-            border: none; padding: 10px 20px; font-size: 0.9rem; font-weight: 500; 
-            cursor: pointer; border-radius: 6px; transition: 0.2s; 
-        }
-        .btn-main { background-color: var(--primary-color); color: white; }
-        .btn-main:hover { background-color: var(--primary-hover); }
-        .btn-ghost { background-color: transparent; border: 1px solid #dadce0; color: var(--text-sub); }
-        .btn-ghost:hover { background-color: #f1f3f4; color: var(--text-main); }
+    #filterInput { width: 120px; }
+    #questionCountInput { width: 68px; }
 
-        footer {
-            text-align: center;
-            padding: 30px;
-            color: var(--text-sub);
-            font-size: 0.85rem;
-            border-top: 1px solid #dadce0;
-            background: #fff;
-            margin-top: auto;
-        }
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 48px;
+      box-shadow: var(--shadow-sm);
+      box-sizing: border-box;
+      width: 100%;
+    }
 
-        @media (max-width: 840px) {
-            .container { width: 95%; }
-            .card { padding: 30px; }
-        }
-    </style>
+    .question-num {
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .question-text {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 32px;
+      line-height: 1.4;
+    }
+
+    .options { list-style: none; padding: 0; margin-bottom: 0; }
+
+    .option-item {
+      border: 1px solid #dadce0;
+      padding: 18px 24px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .option-item:hover { background-color: #f8f9fa; border-color: #bdc1c6; }
+    .option-item.correct { background-color: var(--success-bg); border-color: #34a853; color: var(--success-text); font-weight: 500; }
+    .option-item.wrong { background-color: var(--error-bg); border-color: #d93025; color: var(--error-text); }
+    .option-item.disabled { pointer-events: none; }
+
+    .feedback-panel {
+      margin-top: 24px;
+      padding: 24px;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      border-left: 4px solid var(--primary-color);
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .feedback-label {
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 12px;
+      display: block;
+    }
+
+    .feedback-content {
+      color: var(--text-main);
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    .review-item {
+      padding: 24px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .review-item:last-child { border-bottom: none; }
+
+    .review-q-text {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    .review-ans-row {
+      margin-bottom: 8px;
+      padding: 10px 15px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .review-correct {
+      background-color: var(--success-bg);
+      color: var(--success-text);
+      border-left: 4px solid #34a853;
+    }
+
+    .review-wrong {
+      background-color: var(--error-bg);
+      color: var(--error-text);
+      border-left: 4px solid #d93025;
+    }
+
+    .review-meta-label {
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      margin-top: 12px;
+      display: block;
+    }
+
+    .review-meta-content {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      margin-top: 4px;
+    }
+
+    .wrong-card {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+
+    button {
+      border: none;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: 0.2s;
+      height: 40px;
+      box-sizing: border-box;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .btn-main { background-color: var(--primary-color); color: white; }
+    .btn-main:hover { background-color: var(--primary-hover); }
+
+    .btn-ghost {
+      background-color: transparent;
+      border: 1px solid #dadce0;
+      color: var(--text-sub);
+    }
+
+    .btn-ghost:hover {
+      background-color: #f1f3f4;
+      color: var(--text-main);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      border-top: 1px solid #dadce0;
+      background: #fff;
+      margin-top: auto;
+    }
+
+    @media (max-width: 840px) {
+      .container { width: 95%; }
+      .card { padding: 30px; }
+      .control-panel { padding: 12px 16px; }
+      .top-left { gap: 12px; }
+    }
+  </style>
 </head>
 <body>
 
 <header class="header-section">
-    <div class="brand-icon">AB</div>
-    <h1 class="main-title">Air Brake Knowledge Test Practice 7.0</h1>
+  <div class="brand-icon">AB</div>
+  <h1 class="main-title">Air Brake Knowledge Test Practice 8.0</h1>
 </header>
 
 <div class="container">
-    <div class="control-panel" id="controlPanel">
-        <div class="status-info">
-            <span id="questionCounter">Question 0 / 25</span>
-            <span class="timer-display" id="timerDisplay">30:00</span>
-            <span id="modeDisplay" style="font-size: 0.8rem; color: var(--text-sub);">Mock Exam</span>
-        </div>
-        <div class="btn-group">
-            <button onclick="showWrongBank()" class="btn-ghost">Wrong Questions</button>
-            <button onclick="skipQuestion()" id="btnSkip" class="btn-ghost">Skip</button>
-            <button onclick="nextQuestion()" id="btnNext" class="btn-main" style="display:none;">Next</button>
-        </div>
+  <div class="control-panel" id="controlPanel">
+    <div class="control-top">
+      <div class="top-left">
+        <span class="question-counter-strong" id="questionCounter">Question 0 / 25</span>
+        <span class="bank-info-inline" id="bankInfo">Question Bank: 0 available · Current Set: 0 · Wrong List: 0</span>
+      </div>
+      <div class="timer-display" id="timerDisplay">30:00</div>
     </div>
 
-    <div id="quizContainer">
-        <div class="card">
-            <span class="question-num" id="qCodeDisplay">#CODE</span>
-            <div id="questionArea"></div>
-        </div>
-    </div>
+    <div class="control-bottom">
+      <div class="bottom-left">
+        <span>Filter</span>
+        <input class="toolbar-input" type="text" id="filterInput" placeholder="e.g. R11">
 
-    <div id="resultScreen" style="display:none;" class="card">
-        <div style="text-align:center">
-            <h1 id="scoreStatus" style="font-size: 2.5rem; margin-bottom: 8px;"></h1>
-            <p id="scoreDetail" style="font-size: 1.1rem; color: var(--text-sub); margin-bottom: 40px;"></p>
-            <button onclick="showReview()" class="btn-ghost" style="margin-right:12px">Review History</button>
-            <button onclick="restartSim()" class="btn-main">Restart Test</button>
-        </div>
-    </div>
+        <span>Question Count</span>
+        <input class="toolbar-input" type="number" id="questionCountInput" min="1" step="1" value="25">
 
-    <div id="wrongBankScreen" style="display:none;">
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-            <h2 style="margin:0">Incorrect Question Bank</h2>
-            <div>
-                <button onclick="startWrongPractice()" id="btnPracticeWrong" class="btn-main" style="background:#2e7d32; margin-right:8px;">Practice Mode</button>
-                <button onclick="hideWrongBank()" class="btn-ghost">Close</button>
-            </div>
-        </div>
-        <div id="wrongBankList"></div>
-    </div>
+        <button onclick="applySettings()" class="btn-main">Apply</button>
+        <button onclick="clearSettings()" class="btn-ghost">Reset</button>
 
-    <div id="reviewScreen" style="display:none;" class="card">
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom:1px solid #eee; padding-bottom:16px">
-            <h2 style="margin:0">Test Review</h2>
-            <button onclick="restartSim()" class="btn-main">New Test</button>
-        </div>
-        <div id="reviewList"></div>
+        <button onclick="addCurrentToWrong()" class="btn-ghost" id="btnAddWrong">Add to Wrong List</button>
+        <button onclick="showWrongBank()" class="btn-ghost">Wrong List</button>
+        <button onclick="skipQuestion()" id="btnSkip" class="btn-main">Skip</button>
+        <button onclick="nextQuestion()" id="btnNext" class="btn-main" style="display:none;">Next</button>
+      </div>
     </div>
+  </div>
+
+  <div id="quizContainer">
+    <div class="card">
+      <span class="question-num" id="qCodeDisplay">#CODE</span>
+      <div id="questionArea"></div>
+    </div>
+  </div>
+
+  <div id="resultScreen" style="display:none;" class="card">
+    <div style="text-align:center">
+      <h1 id="scoreStatus" style="font-size: 2.5rem; margin-bottom: 8px;"></h1>
+      <p id="scoreDetail" style="font-size: 1.1rem; color: var(--text-sub); margin-bottom: 40px;"></p>
+      <button onclick="showReview()" class="btn-ghost" style="margin-right:12px">Review History</button>
+      <button onclick="restartSim()" class="btn-main">Restart Test</button>
+    </div>
+  </div>
+
+  <div id="wrongBankScreen" style="display:none;">
+    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+      <h2 style="margin:0">Wrong List</h2>
+      <div>
+        <button onclick="startWrongPractice()" id="btnPracticeWrong" class="btn-main" style="background:#2e7d32; margin-right:8px;">Practice Mode</button>
+        <button onclick="hideWrongBank()" class="btn-ghost">Close</button>
+      </div>
+    </div>
+    <div id="wrongBankList"></div>
+  </div>
+
+  <div id="reviewScreen" style="display:none;" class="card">
+    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom:1px solid #eee; padding-bottom:16px">
+      <h2 style="margin:0">Test Review</h2>
+      <button onclick="restartSim()" class="btn-main">New Test</button>
+    </div>
+    <div id="reviewList"></div>
+  </div>
 </div>
 
 <footer>
-    © 2026 Air Brake Knowledge Test Practice. All rights reserved. Designed by Stone Zhao.
+  © 2026 Air Brake Knowledge Test Practice. All rights reserved. Designed by Stone Zhao.
 </footer>
 
 <script>
-const rawData = `
-#R1-1 What devices introduce a small amount of alcohol vapour into the air system?
-a) Air dryers
-b) Front wheel limiting systems
-c) Injectors and evaporators
-[Correct Answer] 正确答案： c)
-[Explain] 解释：在寒冷气候下，为了防止气路结冰，系统会使用 Injectors and evaporators（喷射器和蒸发器）向空气系统引入少量的 Alcohol vapour（酒精蒸气），以降低水分的 Freezing point（凝固点）。
-[Page] 参考手册页码：181
+const rawData = String.raw`
 
-#R1-2 Compressors must build air in the reservoirs with engine rpm between 1,000 to 1,200:
-a) Up to 90 psi within 3 minutes
-b) From 50 psi to 100 psi within 3 minutes
-c) From 50 psi to 90 psi within 3 minutes
-d) From 50 psi to 90 psi within 1 minutes
-[Correct Answer] 正确答案： c)
-[Explain] 解释：这是衡量 Compressor（压缩机）性能的标准。在发动机处于规定转速时，压力从 50 psi 升高到 90 psi 的 Build air（建压/打气）过程时间不得超过 3 分钟。
-[Page] 参考手册页码：208
+#R11-01 What is the advantage of a dual circuit air system?
 
-#R1-3 When air pressure reaches its operating maximum, the compressor is?
-a) Stopped
-b) Unloaded
-c) Uncoupled
-[Correct Answer] 正确答案： b)
-[Explain] 解释：当气压达到 Cut-out（切断压力/运行最大值）时，Governor（调速器）会使压缩机进入 Unloaded（卸载/空转）循环，此时压缩机仍在旋转但不产生压缩空气。
-[Page] 参考手册页码：155
+a) To reduce brake lining wear
+b) To improve braking effort
+c) To prevent total brake failure
+d) To operate air accessories
+[Correct Answer]: c)
+[Explain]: Dual circuit system（双回路系统）的核心作用是提供 redundancy（冗余保护）。如果一个 circuit（回路）失效，另一个 circuit 仍可继续提供部分 braking（制动），从而避免 total brake failure（完全制动失效）。
+[Reference]: DCV – Dual Air Systems
 
-#R1-4 How does a driver test the air dryer to ensure it is working properly?
-a) They can only be tested by a qualified mechanic
-b) Open the wet tank and check for moisture
-c) Air dryers are no longer used for air brake systems
-[Correct Answer] 正确答案： b)
-[Explain] 解释：检查 Air dryer（空气干燥器）效能的方法是打开 Wet tank（湿罐/第一储气罐）的排水阀。如果排出的水分极少，说明干燥器工作正常；若有大量 Moisture（水分/湿气），则需要维修。
-[Page] 参考手册页码：181
+#R11-02 The size of the compressor used in an air brake system must be such that it will build air pressure from 50 psi to 90 psi at a fast idle within?
 
-#R1-5 What must the driver do if the low air warning activates while the vehicle is in service?
-a) Pull over at the next rest stop
-b) Call dispatch and ask for help
-c) Apply hazards and pull over immediately to check
-[Correct Answer] 正确答案： c)
-[Explain] 解释：行车中 Low air warning（低压报警）激活代表制动系统存在安全隐患。驾驶员必须开启 Hazards（危险报警闪光灯/双闪）并 Immediately（立即）安全靠边停车。
-[Page] 参考手册页码：157
+a) One minute
+b) Two minutes
+c) Three minutes
+d) Four minutes
+[Correct Answer]: c)
+[Explain]: Compressor（空气压缩机）必须具备足够的 pumping capacity（泵气能力），在 fast idle（快速怠速）时，把 reservoir pressure（储气罐压力）从 50 psi 建立到 90 psi，并在规定时间内完成。这是 air supply system（供气系统）性能是否合格的重要标准。
+[Reference]: DCV – Air Supply System
 
-#R1-6 What valve prevents failure of air accessories from totally depleting the system?
-a) Pressure protection valve
-b) One way check valve
-c) Safety valve
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Pressure protection valve（压力保护阀）用于保护主制动系统。当 Air accessories（空气辅助设备/附件）发生严重泄漏时，该阀会在压力过低前关闭，防止系统压力被完全 Depleting（耗尽）。
-[Page] 参考手册页码：184
+#R11-03 What is meant by the term braking distance?
 
-#R1-7 What is the maximum pressure available for brake application?
-a) 125 psi
-b) 150 psi
-c) Reservoir Pressure
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Brake application（施加制动/踩刹车）时可用的最大压力受限于 Reservoirs（储气罐）中当前储存的 Reservoir Pressure（储气罐压力）。
-[Page] 参考手册页码：154
+a) The actual distance the air travels through a properly maintained air-brake system
+b) The actual distance the vehicle travels from the moment a hazard is recognized to the time the vehicle stops
+c) The actual distance the vehicle travels before the driver’s foot moves from the throttle to the brake treadle
+d) The actual distance the vehicle travels after the brakes are applied until the vehicle stops
+[Correct Answer]: d)
+[Explain]: Braking distance（制动距离）是指在 brakes are applied（制动已经施加）之后，到 vehicle stops（车辆完全停止）之间所行驶的距离。它不包括 reaction distance（反应距离）和 brake lag distance（制动迟滞距离）。
+[Reference]: DCV – Braking
 
-#R1-8 Water in the reservoirs is harmful because?
-a) Water corrodes the metal components
-b) It freezes in cold weather
-c) It cuts down the volume of air in the reservoir
-[Correct Answer] 正确答案： b)
-[Explain] 解释：虽然积水会导致腐蚀，但在 BC 省的手册标准中，最危险的因素是水分在低温下会 Freezes（结冰），这可能导致阀门失灵或管路堵塞。
-[Page] 参考手册页码：156
+#R11-04 What is the most common cause of loss of braking effort on air brake equipped vehicles?
 
-#R1-9 Maximum reservoir pressure must be between what two pressures?
-a) 125 psi and 150 psi
-b) 105 psi and 135 psi
-c) 50 psi and 90 psi
-[Correct Answer] 正确答案： b)
-[Explain] 解释：调速器控制的 Maximum reservoir pressure（最高储气罐压力/切断压力）法定范围必须在 105 psi 到 135 psi 之间。
-[Page] 参考手册页码：155
+a) Primary reservoir air loss
+b) Brakes out of adjustment
+c) Overheated brake drums
+d) Secondary reservoir air loss
+[Correct Answer]: b)
+[Explain]: Brakes out of adjustment（制动器调整不当）会使 push rod travel（推杆行程）过大，导致 brake chamber（制动气室）输出的有效机械作用减少，最终使 braking effort（制动力）下降。这是 air brake equipped vehicles 中最常见的问题之一。
+[Reference]: DCV – Foundation Brakes
 
-#R1-10 If a small leak develops in a brake chamber, what valve will maintain the application pressure?
-a) Quick release
-b) Treadle or foot
-c) Flux capacitor
-d) Poppet
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Treadle or foot valve（脚踏阀/制动阀）具有补偿功能。如果 Brake chamber（制动气室）有微小泄漏，该阀会持续供气以 Maintain（维持）驾驶员设定的制动压力。
-[Page] 参考手册页码：158
+#R11-05 On a long steep downgrade, the ideal method of using the brakes is?
 
-#R1-11 At what pressure should the low air pressure warning device activate?
-a) 40 psi
-b) 85 psi
-c) 60 psi
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Low air pressure warning device（低压报警装置）必须在压力降至 60 psi 或以上时 Activate（激活）。
-[Page] 参考手册页码：157
+a) Snubbing as required
+b) Continuous application of 25 psi or less
+c) Not using the brakes
+d) Continuous application of 10 psi or less
+[Correct Answer]: c)
+[Explain]: 按这份题库，正确答案是 c)。其逻辑是要尽量依靠正确 gear selection（档位选择）和 engine braking（发动机制动），避免持续依赖 service brakes（行车制动）导致 heat build-up（热量积聚）与 brake fade（制动衰退）。这里我忠于题库答案，不改动。
+[Reference]: DCV – Braking on Downgrades
 
-#R1-12 Belt driven air compressors should have the belt checked for cracks and adjustment:
-a) Daily
-b) Weekly
-c) Monthly
-[Correct Answer] 正确答案： a)
-[Explain] 解释：对于皮带驱动的压缩机，检查皮带是否有 Cracks（裂纹）和 Adjustment（松紧度调节）是 Daily（每天）行前检查的强制要求。
-[Page] 参考手册页码：204
+#R11-06 If the brakes do not seem to be holding even though sufficient air pressure is present, you should?
 
-#R1-13 What causes moisture to form in the air brake system?
-a) Engine coolant leaking into the system
-b) Air warms up in the wet tank and condenses
-c) Compressed air becomes hot, then cools, creating condensation
-[Correct Answer] 正确答案： c)
-[Explain] 解释：空气在被压缩时会升温并携带水分，当热空气进入储气罐冷却（Cools）后，水分析出形成 Condensation（冷凝/积水）。
-[Page] 参考手册页码：156
+a) Stop, check brakes - continue only after you have determined the brakes are safe
+b) Travel at a reduced speed
+c) Report the condition at the end of the trip
+d) Send a text message to your dispatcher asking for counsel
+[Correct Answer]: a)
+[Explain]: 如果 reservoir pressure（储气罐压力）看起来正常，但 brakes do not seem to be holding（制动似乎不够有效），说明问题可能出在 adjustment（调整）、foundation brakes（基础制动部件）或其他 mechanical defect（机械故障）上。正确做法是 stop（停车）、check brakes（检查制动），并且只有在确认 safe（安全）后才能继续行驶。
+[Reference]: DCV – Trip Inspection / Brake Safety
 
-#R1-14 How are most compressors lubricated today?
-a) By an oil supply in the compressor
-b) From the engine lubricating system
-c) From the transmission lubricating system
-[Correct Answer] 正确答案： b)
-[Explain] 解释：现代大多数商用车压缩机通过连接到 Engine lubricating system（发动机润滑系统/机油系统）来获取润滑。
-[Page] 参考手册页码：155
+#R11-07 What must a driver do when a low air warning system activates?
 
-#R1-15 If the compressor discharge line is broken, what prevents total loss of air?
-a) The One-Way Check Valve
-b) The Governor Valve
-c) The Two-Way Check Valve
-[Correct Answer] 正确答案： a)
-[Explain] 解释：如果连接压缩机的 Discharge line（排出管）破裂，储气罐进气口的 One-Way Check Valve（单向止回阀）会立即关闭，防止空气 Backflow（回流/倒流）。
-[Page] 参考手册页码：156
+a) Pump the foot treadle to increase braking effort
+b) Apply the hand valve
+c) Stop the vehicle and determine the cause of air loss
+d) Rev the motor with the clutch in
+[Correct Answer]: c)
+[Explain]: 当 low air warning system（低气压警报系统）启动时，说明 reservoir pressure 已降到危险范围。此时最重要的是 stop the vehicle（把车辆停下）并 determine the cause of air loss（查明漏气或失压原因），因为继续驾驶可能导致 braking capability（制动能力）严重下降。
+[Reference]: DCV – Low Air Warning System / Safety Devices
 
-#R1-16 The reservoir gauge reads:
+#R11-08 When charging the trailer braking system, if the trailer brakes do not release, this may indicate that:
+
+a) The air lines may be crossed
+b) The fifth wheel is not properly attached to the tractor
+c) The landing gear may be damaged
+d) All of the above
+[Correct Answer]: a)
+[Explain]: 在给 trailer braking system（挂车制动系统）充气时，如果 trailer brakes do not release（挂车制动没有释放），一个典型原因是 air lines may be crossed（供气线和服务线可能接反）。线路接反会使系统动作异常，导致 trailer brake release（挂车制动释放）失败。
+[Reference]: DCV – Tractor-Trailer Air Brake Systems
+
+#R11-09 The main reservoir gauge reads?
+
 a) Wet tank pressure
 b) Compressor performance
-c) Pressure available for service
-[Correct Answer] 正确答案： c)
-[Explain] 解释：仪表盘上的 Reservoir gauge（储气罐压力表）显示的读数反映了当前可用于 Service brake（行车制动/服务制动）的空气压力。
-[Page] 参考手册页码：157
+c) Air pressure in the brake chambers
+d) Pressure available for service brake performance
+[Correct Answer]: d)
+[Explain]: Main reservoir gauge（主储气罐压力表）显示的是可供 service brake performance（行车制动工作）使用的 air pressure（空气压力）。它不是专门显示 brake chambers（制动气室）里的应用压力，而是显示系统中可用的储备压力。
+[Reference]: DCV – Gauges / Reservoir Pressure
 
-#R1-17 The 5 main components of the air brake system are:
-a) Compressor with governor, one way check valve, reservoir gauge, foot valve, foundation brakes
-b) Compressor with governor, air lines, reservoir, foot valve, foundation brakes
-c) Compressor, air lines, reservoir gauge, brake pedal, brake chambers
-[Correct Answer] 正确答案： b)
-[Explain] 解释：气刹系统由五个核心部分组成：带调速器的 Compressor（压缩机）、Air lines（气路管线）、Reservoir（储气罐）、Foot valve（脚踏阀/制动阀）以及车轮端的 Foundation brakes（基础刹车机械部分）。
-[Page] 参考手册页码：154
+#R11-10 If the weight of a vehicle is doubled, how many times must the stopping power be increased to stop in the same distance?
 
-#R2-1 If you double the speed of a vehicle, how much more stopping power is required to stop in the same distance?
-a) Two times the stopping power
-b) Four times the stopping power
-c) Eight times the stopping power
-[Correct Answer] 正确答案： b)
-[Explain] 解释：根据物理定律，Stopping power（制动力/能量）与速度的平方成正比。如果 Speed（速度）翻倍，动能变为 4 倍，因此在相同距离内停下需要 4 倍的制动力。
-[Page] 参考手册页码：149
+a) Two times
+b) Six times
+c) Eight times
+d) Four times
+[Correct Answer]: a)
+[Explain]: 在相同 speed（速度）下，如果 vehicle weight（车辆重量）加倍，而 stopping distance（停车距离）仍要保持不变，那么 braking force / stopping power（制动力）也必须相应增加到两倍。这属于基础 braking physics（制动物理）概念。
+[Reference]: DCV – Braking
 
-#R2-2 An automatic front wheel limiting valve is overridden completely when application pressure exceeds:
-a) 30 psi
-b) 60 psi
-c) 90 psi
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Automatic front wheel limiting valve（自动前轮限制阀）在轻微制动时会减少前轮压力。但当 Application pressure（施加压力/踩刹车压力）超过 60 psi 时，该功能会被 Overridden（覆盖/失效），系统将向前轮提供全额压力。
-[Page] 参考手册页码：182
+#R11-11 How are most modern truck and RV compressors lubricated?
 
-#R2-3 What is meant by the term “Brake Lag”?
-a) A wheel chock to keep the vehicle from moving
-b) The 4/10s of a second delay the relay valve now eliminates
-c) The time between stepping on or applying the foot valve, and when the brakes begin to function (shoes against drums)
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Brake Lag（制动延迟）是指从驾驶员踩下 Foot valve（脚踏阀）开始，到空气传输至气室并使 Brake shoes（刹车蹄）接触 Brake drums（刹车鼓）产生制动作用之间的时间差。
-[Page] 参考手册页码：153
+a) From the engine’s lubricating system
+b) By an oil supply in the compressor crank case
+c) From the transmission lubricating system
+d) From the radiator
+[Correct Answer]: a)
+[Explain]: 多数 modern truck and RV compressors（现代卡车和房车压缩机）由 engine’s lubricating system（发动机润滑系统）供油润滑。这意味着 compressor 的正常工作与 engine lubrication（发动机润滑）状态直接相关。
+[Reference]: DCV – Air Supply System / Compressor
 
-#R2-4 If 40 psi is exerted against a diaphragm that is 30 square inches, what is the total force exerted?
-a) 1200 lbs
-b) 1200 psi
-c) 1200 km/h
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Total force（总推力）的计算方式是 Air pressure（气压）乘以 Diaphragm（隔膜）的面积。40 psi × 30 sq. in. = 1200 lbs（磅）。
-[Page] 参考手册页码：152
+#R11-12 What type of air brake endorsement must you have to drive on industrial roads?
 
-#R2-5 Stopping distance of a vehicle is most affected by?
-a) The condition of the brakes
-b) The condition and surface of the road
-c) The speed of the vehicle
-d) The grade or steepness of the road
-[Correct Answer] 正确答案： c)
-[Explain] 解释：虽然路况和制动器状态都很重要，但 Speed（速度）是对 Stopping distance（制动距离）影响最大的因素，因为能量随速度平方增长。
-[Page] 参考手册页码：149
+a) Off-highway
+b) On-highway
+c) Industrial
+d) a. and c. are correct
+[Correct Answer]: d)
+[Explain]: 按这份题库，正确答案是 d)，表示在 industrial roads（工业道路）环境下，适用的 air brake endorsement（空气制动许可）包括 off-highway 和 industrial 这两类。这里保持与题库答案一致，不改动。
+[Reference]: DCV – Air Brake Endorsements / Industrial Roads
 
-#R2-6 What is a “bob-tail” proportioning valve?
-a) Increases rear brake pressure
-b) Prevents lock-up of rear brakes when trailer is not connected
-c) Allows driver to make lighter brake applications
-d) Allows you to move a disabled vehicle to the shop
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Bob-tail proportioning valve（单机头比例阀）用于单机拖头行驶（未挂拖车）时，通过减少后轴制动压力来防止轻载的后轮发生 Lock-up（抱死/打滑）。
-[Page] 参考手册页码：182
+#R11-13 Signs posted in advance of a downgrade, instructing truck drivers to stop and check brakes are?
 
-#R2-7 What is the main purpose of a relay valve?
-a) To reduce the application pressure to the front brake chambers
-b) To relay reservoir air directly to the treadle valve
-c) To reduce lag time when rear brakes are applied
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Relay valve（继动阀）靠近后轮气室安装，其主要作用是直接从储气罐向气室供气，从而缩短空气传输距离，减少后轮制动的 Lag time（延迟时间）。
-[Page] 参考手册页码：163
+a) Warning signs
+b) Advisory signs
+c) Regulatory signs
+d) Informative signs
+[Correct Answer]: c)
+[Explain]: 要求 drivers（驾驶员）必须 stop and check brakes（停车检查制动）的标志属于 regulatory signs（法规性标志），因为它传达的是必须遵守的要求，而不只是 warning（警示）或 advisory（建议）。
+[Reference]: DCV – Signs / Downgrade Safety
 
-#R2-8 What is the lowest pressure before the governor must cause the compressor to reload, and rebuild reservoir pressure?
-a) 60 psi
-b) 80 - 85 psi
-c) 105 - 135 psi
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Governor（调速器）必须在压力下降到 80 - 85 psi 之前（即 Cut-in 压力点）指令压缩机重新开始打气，以 Rebuild（重建）系统压力。
-[Page] 参考手册页码：155
+#R11-14 How often should the reservoirs be drained?
 
-#R2-9 What are “foundation brakes”?
-a) The mechanical parts of the brake assembly at the wheel
-b) Brakes only on airbrake equipped trailers
-c) Brakes used on buses only
-d) The mechanical parts of the brake assembly used in hydraulic brake systems only
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Foundation brakes（基础刹车）是指车轮端的机械结构部分，通常包括 Brake drums（刹车鼓）、Shoes（蹄片）、S-cam（S凸轮）和 Slack adjusters（间隙调节器）等。
-[Page] 参考手册页码：154
+a) Weekly, or more often under extreme conditions
+b) Monthly, or more often under extreme conditions
+c) Daily, or more often under extreme conditions
+d) They do not need to be drained
+[Correct Answer]: c)
+[Explain]: Reservoirs（储气罐）应 daily（每天）排放，以去除 moisture（水分）和 contamination（污染物）。如果 operating conditions（工作环境）更恶劣，例如高湿、低温或高频使用，则需要 more often（更频繁）排放。
+[Reference]: DCV – Reservoir Drainage / Maintenance
 
-#R2-10 What is the purpose of a quick release valve?
-a) To release air faster reducing brake lag
-b) To release air faster allowing the service brakes to release quicker
-c) To allow air to escape quickly from the treadle valve
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Quick release valve（快速释放阀）的作用是允许空气直接从该阀排出，而不是返回通过长长的管路回到脚踏阀排出，从而使 Service brakes（行车制动）能更迅速地 Release（解除/松开）。
-[Page] 参考手册页码：162
+#R11-15 What causes moisture to form in the air brake system?
 
-#R2-11 What is the final factor that will determine if the vehicle will move?
-a) The amount of power
+a) Engine coolant leaking into the system
+b) Air warms up in the wet tank
+c) Air cools in the wet tank
+d) Humid weather
+[Correct Answer]: c)
+[Explain]: 空气被 compressor 压缩后会升温，随后在 wet tank（湿储气罐）或系统中冷却。Air cools（空气冷却）时会形成 condensation（冷凝），这就是 air brake system 中 moisture（水分）的主要来源。
+[Reference]: DCV – Moisture in the Air Brake System
+
+#R11-16 If 40 psi is exerted against a diaphragm of 30 square inches in area, what is the total force that would be exerted?
+
+a) 12,000 lbs of force
+b) 40 lbs of force
+c) 7,200 lbs of force
+d) 1,200 lbs of force
+[Correct Answer]: d)
+[Explain]: 计算公式是 Force = Pressure × Area。这里是 40 psi × 30 square inches = 1,200 lbs of force。这个题考查 diaphragm（膜片）受压后产生 mechanical force（机械力）的基础计算。
+[Reference]: DCV – Brake Chamber Force / Braking Principles
+
+#R11-17 Maximum reservoir pressure must be between what two pressures?
+
+a) 105 psi to 135 psi
+b) 105 psi to 150 psi
+c) 100 psi to 125 psi
+d) 50 psi to 90 psi
+[Correct Answer]: a)
+[Explain]: Maximum reservoir pressure（主储气罐最大压力）必须处于规定 operating range（工作范围）内。题库答案给出 105 psi to 135 psi，这对应正常 governor control（调压器控制）下系统允许的上限范围。
+[Reference]: DCV – Governor / Reservoir Pressure
+
+#R11-18 By what minimum pressure should the governor cause the compressor to return to its pumping stage?
+
+a) 80 psi
+b) 65 psi
+c) 60 psi
+d) 105 psi
+[Correct Answer]: a)
+[Explain]: Governor（调压器）会在系统压力降到 cut-in pressure（切入压力）时，使 compressor return to its pumping stage（压缩机重新开始泵气）。题库答案给出最低值为 80 psi，表示系统不能低于这个最低标准才恢复供气。
+[Reference]: DCV – Governor / Cut-in Pressure
+
+#R11-19 If one set of brake shoes are poorly adjusted, what effect could it have on the remaining set of brake shoes in the system?
+
+a) They would increase their share of the braking load, possibly causing overheating
+b) The brakes would automatically adjust
+c) There would be noticeable affect
+d) No noticeable change
+[Correct Answer]: a)
+[Explain]: 如果一组 brake shoes（制动蹄片）调整不良，无法承担应有的 braking load（制动负荷），那么其余正常工作的 brake shoes 就会承担更多负荷。这样可能导致 overheating（过热）和 uneven braking（制动不均匀）。
+[Reference]: DCV – Foundation Brakes / Brake Adjustment
+
+#R11-20 If a trailer is not equipped with spring brakes and the trailer air tank drains, the trailer would likely:
+
+a) Release as the air pressure drops
+b) Become dependent on the tractor brakes
+c) Be fine
+d) b. and c. are correct
+[Correct Answer]: b)
+[Explain]: 如果 trailer（挂车）没有 spring brakes（弹簧制动），而 trailer air tank（挂车储气罐）又失去压力，那么 trailer 本身就不能依靠 spring brake 自动保持或制动，结果会变得 dependent on the tractor brakes（依赖牵引车制动）。
+[Reference]: DCV – Trailer Brake Systems / Spring Brakes
+
+#R11-21 What is the final factor that will determine if a vehicle will move?
+
+a) The amount of traction
 b) The amount of friction
-c) The amount of traction
-[Correct Answer] 正确答案： c)
-[Explain] 解释：无论有多少动力，Traction（牵引力/附着力）才是决定车辆是否能移动或停止的最终物理限制因素，它取决于轮胎与路面之间的握持力。
-[Page] 参考手册页码：147
+c) The amount of power
+d) The amount of fuel
+[Correct Answer]: a)
+[Explain]: Vehicle movement（车辆是否移动）的最终决定因素是 traction（牵引附着力）。即使 engine power（发动机动力）足够，如果轮胎与地面之间缺乏足够 traction，车辆仍可能无法有效起步或移动。
+[Reference]: DCV – Braking / Traction
 
-#R2-12 What is meant by braking distance?
-a) The actual distance the vehicle travels after the brakes have applied, until the vehicle stops
-b) The actual distance the vehicle travels from the moment a hazard is recognized to the time the vehicle stops
-c) The actual distance the air travels through a properly maintained air-brake system
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Braking distance（制动距离）特指从制动器正式起作用（Applied）那一刻起，直到车辆完全停稳所经过的距离。
-[Page] 参考手册页码：150
+#R11-22 To stop a vehicle, the energy of motion is turned into?
 
-#R2-13 If the speed and weight of a vehicle is doubled, how many times must the stopping power be increased to be able to stop in the same distance?
+a) Heat in the spring brakes
+b) Heat in the brake lining and drums
+c) Moisture in the reservoirs
+d) Rubber left on the road
+[Correct Answer]: b)
+[Explain]: 当车辆减速和停车时，motion energy（运动能量）会通过 friction（摩擦）转化为 heat（热），主要出现在 brake lining and drums（制动衬片和制动鼓）中。这是制动工作的基本原理。
+[Reference]: DCV – Braking / Heat
+
+#R11-23 If a small leak develops in a brake chamber, what type of valve will continue to hold the same application pressure in the brake chamber?
+
+a) Poppet
+b) Graduating
+c) Relay
+d) Self balancing
+[Correct Answer]: d)
+[Explain]: Self balancing valve（自平衡阀）能够在系统存在轻微泄漏时，继续维持 brake chamber（制动气室）内的 application pressure（应用压力）相对稳定，因此不会因为小 leak（泄漏）立刻失去作用。
+[Reference]: DCV – Valves / Foot Valve Operation
+
+#R11-24 What is the main cause of brake fade at high temperatures?
+
+a) The air pressure becomes hot
+b) The brake linings expand away from the drums
+c) The brake drums expand away from the linings
+d) The slack adjusters seize from the heat
+[Correct Answer]: c)
+[Explain]: Brake fade（制动衰退）在高温下常见原因之一，是 brake drums（制动鼓）受热膨胀，expand away from the linings（与衬片之间的有效接触减弱），从而降低 braking efficiency（制动效率）。
+[Reference]: DCV – Brake Fade / Heat
+
+#R11-25 When air pressure in the reservoir is at maximum, the compressor is?
+
+a) Uncoupled
+b) Stopped
+c) Governor reloaded
+d) Governor unloaded
+[Correct Answer]: d)
+[Explain]: 当 reservoir pressure（储气罐压力）达到 maximum（最大值）时，governor 会使 compressor 进入 unloaded（卸载）状态，也就是不再继续压缩供气，但压缩机本身并不是完全 stopped。
+[Reference]: DCV – Governor / Compressor Unloading
+
+#R11-26 To receive an ICBC approved air brake endorsement you must:
+
+a) Complete an ICBC approved air brake course
+b) Pass the air brake knowledge test
+c) Pass an air brake pre-trip inspection test
+d) All of the above
+[Correct Answer]: d)
+[Explain]: 取得 ICBC approved air brake endorsement（ICBC认可的空气制动许可）需要完成 course（课程）、通过 knowledge test（笔试）以及通过 pre-trip inspection test（气刹预检测试）。题目考查的是完整资格要求。
+[Reference]: DCV – Air Brake Endorsement Requirements
+
+#R11-27 How is the heat dissipated that is generated by the brakes?
+
+a) Dissipated by the speed of the vehicle
+b) Dissipated by the air temperature
+c) Dissipated by the slack adjusters
+d) Dissipated by the drums
+[Correct Answer]: d)
+[Explain]: 制动时产生的 heat（热量）主要由 drums（制动鼓）吸收，然后 dissipated（散发）到 surrounding air（周围空气）中。也就是说，drums 是主要的散热部件。
+[Reference]: DCV – Braking / Heat Dissipation
+
+#R11-28 When building air pressure during an air brake pre-trip inspection, at what p.s.i. should the low air warning device deactivate?
+
+a) 80 p.s.i. or higher
+b) 50 p.s.i. or higher
+c) 60 p.s.i. or higher
+d) 70 p.s.i. or higher
+[Correct Answer]: c)
+[Explain]: 在 pre-trip inspection（出车前检查）中，随着 system pressure（系统压力）重新建立，low air warning device（低气压警报装置）应在 60 psi or higher 时解除。这个数值用于确认 warning device 的工作范围是否正常。
+[Reference]: DCV – Low Air Warning Device / Pre-trip Inspection
+
+#R11-29 The final decision as to the condition of the brakes should be made by?
+
+a) The owner
+b) The mechanic
+c) The driver
+d) The police
+[Correct Answer]: c)
+[Explain]: 车辆是否 safe to operate（适合上路）这一最终判断责任，在运行前属于 the driver（驾驶员）。即使 owner 或 mechanic 提供意见，driver 仍要对 vehicle condition（车辆状态）作最终决定。
+[Reference]: DCV – Driver Responsibility / Brake Safety
+
+#R11-30 If the compressor discharge line is broken, what prevents total air loss?
+
+a) The governor
+b) The two-way check valve
+c) The relay valve
+d) The one-way check valve
+[Correct Answer]: d)
+[Explain]: 如果 compressor discharge line（压缩机排气管）断裂，one-way check valve（单向止回阀）会阻止储气罐中的空气反向流失，从而 prevents total air loss（防止全部空气损失）。
+[Reference]: DCV – One-way Check Valve / Air Supply System
+
+#R12-01 The only way to be sure your brakes are adjusted properly is?
+
+a) By physically checking the push rod travel at each wheel
+b) By checking the pressure gauges
+c) By feeling the response on a light air application
+d) By driving ahead and doing a full brake application
+[Correct Answer]: a)
+[Explain]: 正确判断 brakes are adjusted properly（制动是否调整正确）的唯一可靠方法，是 physically checking（实际检查）每个 wheel 上的 push rod travel（推杆行程）。
+[Reference]: DCV – Foundation Brakes / Adjustment
+
+#R12-02 A good way to test the holding power of a spring brake is to?
+
+a) Tug test in low gear, spring brakes applied
+b) Allow the spring brake to hold the vehicle on a grade
+c) Applying the spring brake with the vehicle in motion
+d) Spring brakes do not need to be able to stop the vehicle
+[Correct Answer]: a)
+[Explain]: 使用 tug test（牵引测试）验证 spring brakes（弹簧制动）的 holding power（保持能力）。
+[Reference]: DCV – Pre-trip Inspection / Spring Brakes
+
+#R12-03 The speed at which a vehicle should travel on a downgrade is best determined by?
+
+a) The necessity to make an emergency stop
+b) The condition of the road
+c) The length and percentage of the grade
+d) The condition of the brake lining
+[Correct Answer]: a)
+[Explain]: 下坡速度必须保证能够进行 emergency stop（紧急停车）。
+[Reference]: DCV – Braking on Downgrades
+
+#R12-04 The final factor which will determine if a vehicle will stop is?
+
+a) Traction
+b) Brake adjustment
+c) Primary reservoir air pressure
+d) Friction
+[Correct Answer]: d)
+[Explain]: 最终决定停车的是 friction（摩擦力）。
+[Reference]: DCV – Braking / Friction
+
+#R12-05 Water in the reservoir is harmful to the air system because?
+
+a) It carries dirt into the valves
+b) It cuts down on reservoir volume
+c) It freezes in cold weather
+d) All of the above
+[Correct Answer]: d)
+[Explain]: 水会造成 contamination（污染）、volume reduction（容量减少）和 freezing（结冰）。
+[Reference]: DCV – Moisture
+
+#R12-06 An automatic front wheel limiting valve is over-ridden when application pressure exceeds?
+
+a) 20 psi
+b) 40 psi
+c) 60 psi
+d) 90 psi
+[Correct Answer]: c)
+[Explain]: 超过60 psi时该 valve 被 override（覆盖）。
+[Reference]: DCV – Brake Balance
+
+#R12-07 During an air brake pre-trip inspection on a vehicle with one trailer, you should make sure that air loss is not more than:
+
+a) 1 p.s.i. within one minute
+b) 2 p.s.i. within one minute
+c) 3 p.s.i. within one minute
+d) 4 p.s.i. within one minute
+[Correct Answer]: d)
+[Explain]: 组合车辆 air loss 不得超过 4 psi/min。
+[Reference]: DCV – Pre-trip Inspection
+
+#R12-08 Spring brakes are most useful as?
+
+a) A reserve brake if the service brakes fail
+b) A parking brake
+c) An emergency stopping device
+d) Service brakes
+[Correct Answer]: b)
+[Explain]: spring brakes 主要用于 parking（驻车）。
+[Reference]: DCV – Spring Brakes
+
+#R12-09 What is the purpose of a relay valve?
+
+a) To reduce application pressure to the steering axle
+b) To relay reservoir air directly to the treadle valve
+c) To release the spring brakes faster
+d) To provide quicker application, thus reducing brake lag
+[Correct Answer]: d)
+[Explain]: relay valve 用于减少 brake lag（制动延迟）。
+[Reference]: DCV – Relay Valve
+
+#R12-10 To operate a vehicle equipped with air brakes on a highway, you must have:
+
+a) Completed an air brake course and an air brake pre-trip inspection test
+b) An industrial air brake endorsement
+c) An air brake endorsement from ICBC.
+d) A and C are correct
+[Correct Answer]: d)
+[Explain]: 需要 ICBC endorsement + training。
+[Reference]: DCV – Licensing
+
+#R12-11 The stopping distance of a vehicle is most affected by?
+
+a) The speed of the vehicle
+b) The condition of the brakes
+c) The condition of the tires
+d) The condition of the highway
+[Correct Answer]: a)
+[Explain]: speed 对 stopping distance 影响最大（平方关系）。
+[Reference]: DCV – Braking
+
+#R12-12 The spring brake emergency release system will allow a driver to?
+
+a) Move a disabled vehicle to safety
+b) Slowly drive a disabled vehicle to a stop
+c) Operate in California
+d) Cage the spring brakes
+[Correct Answer]: a)
+[Explain]: emergency release 用于移动故障车辆。
+[Reference]: DCV – Spring Brakes
+
+#R12-13 While doing an air leak test in a tractor and semi-trailer with maximum air pressure, air loss should not exceed?
+
+a) 3 psi
+b) 4 psi
+c) 6 psi
+d) 2 psi
+[Correct Answer]: b)
+[Explain]: 最大允许 4 psi/min。
+[Reference]: DCV – Air Leak Test
+
+#R12-14 What is the most common cause of loss of effective braking on air equipped vehicles?
+
+a) Overheated brake drums
+b) Low air pressure
+c) Slippery roads
+d) Brakes out of adjustment
+[Correct Answer]: d)
+[Explain]: 最常见原因是 brakes out of adjustment。
+[Reference]: DCV – Foundation Brakes
+
+#R12-15 A quick release valve is sometimes used with spring brakes to?
+
+a) Allow faster application
+b) Allow faster release
+c) Allow more powerful parking brake
+d) Allow for more easily checking slack adjustor travel
+[Correct Answer]: a)
+[Explain]: 按题库答案，强调 faster application。
+[Reference]: DCV – Valves
+
+#R12-16 What is the purpose of a quick release valve?
+
+a) To prevent brake lag time
+b) To allow service brakes to release quickly
+c) To allow air to escape through the foot treadle
+d) To reduce brake lag time
+[Correct Answer]: b)
+[Explain]: 作用是快速释放制动。
+[Reference]: DCV – Valves
+
+#R12-17 Water cooled brakes are used:
+
+a) To control brake drum overheating (prevent brake fade).
+b) To help extremely large vehicles stop safely.
+c) To avoid any cracks in the brake drum.
+d) All of the above.
+[Correct Answer]: d)
+[Explain]: 涉及 cooling, safety 和 durability。
+[Reference]: DCV – Brake Systems
+
+#R12-18 Compounding of the brakes will result in some vehicles when?
+
+a) A full brake application is made when the spring brakes are released
+b) A full brake application is made when the hand valve is on
+c) A full brake application is made when the spring brakes are applied
+d) A full brake application is made when the wheels are not blocked
+[Correct Answer]: c)
+[Explain]: compounding 是 service + spring 同时作用。
+[Reference]: DCV – Compounding
+
+#R12-19 Drivers are required to have an industrial air brake endorsement if:
+
+a) They will be transporting natural resources on industrial roads.
+b) They will be driving loaders or graders on industrial roads.
+c) They are operating unlicensed, air brake equipped vehicles that are loaded with natural resources on industrial roads.
+d) All of the above.
+[Correct Answer]: c)
+[Explain]: 题库强调 unlicensed vehicles 情况。
+[Reference]: DCV – Industrial Endorsement
+
+#R12-20 What is the maximum pressure available for a full brake application at any given time?
+
+a) Depends on the distance the foot treadle is depressed
+b) 135 psi
+c) 105 psi
+d) Reservoir pressure
+[Correct Answer]: d)
+[Explain]: 最大可用压力来自 reservoir pressure。
+[Reference]: DCV – Air Supply
+
+#R12-21 By what pressure should the low pressure warning device activate?
+
+a) Above 40 psi
+b) Above 90 psi
+c) Above 60 psi
+d) Before 20 psi
+[Correct Answer]: c)
+[Explain]: 警报通常在约60 psi触发。
+[Reference]: DCV – Warning Devices
+
+#R12-22 How can spring brakes be released without the use of air pressure?
+
+a) Disconnect the slack adjustor and push-rods
+b) Caging the springs
+c) Backing off the slack adjuster all the way
+d) Undoing the bolt that holds the spring in place
+[Correct Answer]: b)
+[Explain]: caging 是机械释放方式。
+[Reference]: DCV – Spring Brakes
+
+#R12-23 Belt driven air compressors should have the belts checked for cracks and tension?
+
+a) Weekly
+b) Monthly
+c) Daily
+d) Periodically
+[Correct Answer]: c)
+[Explain]: 每日检查属于安全检查。
+[Reference]: DCV – Maintenance
+
+#R12-24 Unless a spring brake system has an anti-compounding device, the spring brakes should be released before making a full brake application test because?
+
+a) The compounding force may damage the slack adjuster and other brake components
+b) The brakes will apply too quickly
+c) You will not get a true air loss reading
+d) The brakes will release too quickly
+[Correct Answer]: a)
+[Explain]: 防止 compounding damage。
+[Reference]: DCV – Compounding
+
+#R12-25 Braking systems that have automatic slack adjusters?
+
+a) Must be checked daily for travel
+b) Do not need to be checked for travel
+c) Must be checked occasionally for travel
+d) Must be checked by a mechanic for travel
+[Correct Answer]: a)
+[Explain]: 仍需 daily check。
+[Reference]: DCV – Slack Adjusters
+
+#R12-26 If you perform a brake test and find that the brakes are not operating safely, what should you do?
+
+a) Drive your vehicle back to your carrier for repair.
+b) Finish your trip, and then have the vehicle repaired.
+c) Stop the vehicle in a safe place and secure it, do not drive it until the brakes are repaired.
+d) Call for 24 hour roadside assistance.
+[Correct Answer]: c)
+[Explain]: 安全优先，禁止继续驾驶。
+[Reference]: DCV – Safety
+
+#R12-27 What is meant by the term friction?
+
+a) The factor that stops the vehicle
+b) The factor that moves the vehicle
+c) The force that resists movement between two surfaces in contact
+d) The force the push rod applies to the diaphragm
+[Correct Answer]: c)
+[Explain]: friction 是阻碍运动的力。
+[Reference]: DCV – Physics
+
+#R12-28 When checking slack adjuster push rod travel with a pry bar, travel must not exceed?
+
+a) One and a half inches
+b) Two inches
+c) One half inch
+d) Three quarters of an inch
+[Correct Answer]: d)
+[Explain]: 标准限制 3/4 inch。
+[Reference]: DCV – Adjustment
+
+#R12-29 When should a driver use the manual front wheel limiting valve?
+
+a) When necessary on slippery roads to cut out front wheel brakes
+b) When necessary on slippery roads to cut front brake application by 25%
+c) When necessary on slippery roads to cut front brake application by 75%
+d) When necessary on slippery roads to cut front brake application by 50%
+[Correct Answer]: d)
+[Explain]: 降低前轮制动力避免打滑。
+[Reference]: DCV – Brake Balance
+
+#R12-30 If the speed and weight of a vehicle is doubled, how many times must the braking force be increased to stop in the same distance?
+
+a) Two times
+b) Four times
+c) Six times
+d) Eight times
+[Correct Answer]: d)
+[Explain]: speed + weight doubling → braking ×8。
+[Reference]: DCV – Braking Physics
+
+#R13-01 When the supply line is broken, tractor pressure should not drain below?
+
+a) 50 psi to 90 psi
+b) 105 psi to 135 psi
+c) 20 psi to 45 psi
+d) 105 psi to 150 psi
+[Correct Answer]: c)
+[Explain]: 当 supply line（供气线）断裂时，tractor protection system（牵引车保护系统）应防止 air pressure（空气压力）继续下降到危险水平。题库给出的安全范围是 20–45 psi，用于防止 total air loss（完全失压）。
+[Reference]: DCV – Tractor Protection System
+
+#R13-02 What are the main components of a simple air brake system?
+
+a) Air lines, reservoir, brake pedal, foundation brakes, spring-line.
+b) Compressor, air lines, brake pedal.
+c) Compressor, air lines, reservoir, brake pedal, foundation brakes.
+d) Air lines, reservoir, foundation brakes, spring-line.
+[Correct Answer]: c)
+[Explain]: 一个 simple air brake system（基础气刹系统）包含 compressor（压缩机）、air lines（气管）、reservoir（储气罐）、brake pedal/foot valve（制动阀）和 foundation brakes（基础制动装置）。
+[Reference]: DCV – Air Brake System Components
+
+#R13-03 Why is it so critical to check slack adjustments?
+
+a) To ensure the vehicle can stop safely.
+b) To ensure the foot valve is in the correct position.
+c) To measure the push rod travel.
+d) To pass inspection.
+[Correct Answer]: a)
+[Explain]: Slack adjustment（间隙调整）直接影响 braking efficiency（制动效率），如果调整不当，vehicle may not stop safely（车辆无法安全停车）。
+[Reference]: DCV – Foundation Brakes
+
+#R13-04 How can you tell if you have reversed the supply line and service line connections in your spring parking brakes?
+
+a) The spring parking brakes will not release even when you use the parking brake control on the dashboard.
+b) The trailer service brakes will not function.
+c) The parking brake control on the dashboard will short out.
+d) a and b
+[Correct Answer]: d)
+[Explain]: 当 supply line 和 service line 接反时，可能导致 spring brakes 不释放，以及 service brakes 无法正常工作。
+[Reference]: DCV – Tractor-Trailer Connections
+
+#R13-05 Why should you avoid compounding the air brakes?
+
+a) You can cause damage to the slack adjusters and s-cams.
+b) You can cause damage to the brake chamber mounting bolts, brake shoe rollers, shoes and brake drums.
+c) You will risk damage by putting too much force on the brake components.
+d) All of the above
+[Correct Answer]: d)
+[Explain]: Compounding（复合制动）是 service brake 与 spring brake 同时作用，会产生 excessive force（过大力），可能损坏多个 brake components（制动部件）。
+[Reference]: DCV – Compounding
+
+#R13-06 What valve supplies air to the trailer reservoir?
+
+a) The trailer supply valve
+b) The hand valve
+c) The highway valve
+d) The two-way check valve
+[Correct Answer]: a)
+[Explain]: Trailer supply valve（挂车供气阀）负责向 trailer reservoir（挂车储气罐）提供空气。
+[Reference]: DCV – Trailer Supply System
+
+#R13-07 What must you do if the low pressure warning indicator activates?
+
+a) Stop immediately and call your supervisor for assistance.
+b) Continue on to the next stop and then investigate.
+c) Wait until the wig-wag retracts then stop.
+d) Stop and find the cause of the air loss.
+[Correct Answer]: d)
+[Explain]: 当 low pressure warning（低压警报）启动时，必须 stop 并查明 air loss 原因，否则 braking capability 会下降。
+[Reference]: DCV – Warning Systems
+
+#R13-08 If a trailer that DOES NOT have spring brakes breaks away from a tractor, the trailer brakes must hold in a full emergency application for a minimum of?
+
+a) 10 minutes
+b) 20 minutes
+c) 15 minutes
+d) 5 minutes
+[Correct Answer]: c)
+[Explain]: 无 spring brakes 的 trailer 依靠 air pressure 维持制动，因此要求 emergency application 持续时间至少 15 分钟。
+[Reference]: DCV – Trailer Brake Safety
+
+#R13-09 In most trailers the reservoir is filled with air through the?
+
+a) Treadle valve
+b) Service line
+c) Primary reservoir
+d) Relay emergency valve
+[Correct Answer]: d)
+[Explain]: Relay emergency valve 控制 trailer reservoir 的充气与紧急制动。
+[Reference]: DCV – Trailer System
+
+#R13-10 What prevents total loss of air pressure in the service brake system in the event of an air line rupture between the compressor and the supply reservoir?
+
+a) Reservoir pressure gauge
+b) One-way check valves
+c) Secondary reservoir
+d) Foot valve
+[Correct Answer]: b)
+[Explain]: One-way check valve（单向阀）防止 air 反向流动，从而防止 total air loss。
+[Reference]: DCV – Check Valves
+
+
+#R13-11 When the trailer without spring brakes is disconnected and left parked, the driver should?
+
+a) Make sure the trailer brakes are applied
+b) Block the wheels
+c) Make sure the brakes are adjusted
+d) Check wheels for excessive heat
+[Correct Answer]: b)
+[Explain]: 没有 spring brakes 时，必须使用 wheel chocks（挡轮器）防止车辆移动。
+[Reference]: DCV – Parking Safety
+
+#R13-12 Why are air brakes, rather than hydraulic brakes, used on heavy commercial vehicles?
+
+a) Use greater force to apply brakes, more tolerant to small leaks and they have proven they stop heavy vehicles safely.
+b) They are cheaper and more effective.
+c) Use a greater force and are quieter in residential areas.
+d) They have proven they are capable of stopping heavy vehicles and have a faster brake lag time.
+[Correct Answer]: a)
+[Explain]: Air brakes 可提供更大 braking force，并对 leaks 更容忍。
+[Reference]: DCV – Air vs Hydraulic
+
+#R13-13 The valve that causes the trailer brakes to apply immediately if the trailer breaks away is called?
+
+a) The two way check valve
+b) The automatic front wheel limiting valve
+c) The tractor protection valve
+d) The relay emergency valve
+[Correct Answer]: d)
+[Explain]: relay emergency valve 控制 trailer 紧急制动。
+[Reference]: DCV – Emergency Valves
+
+#R13-14 When a trailer without spring brakes is left parked, the wheels must be blocked because?
+
+a) The trailer reservoir pressure might bleed off, causing trailer to run away
+b) Someone may pull the trailer without charging the system
+c) The tractor protection valve may leak air
+d) The trailer supply valve may malfunction
+[Correct Answer]: a)
+[Explain]: air pressure 会逐渐流失，导致制动失效。
+[Reference]: DCV – Parking Safety
+
+#R13-15 If you make a full brake application during an emergency stop with an automatic front wheel limiting system, how much air pressure is directed to the front brakes?
+
+a) 60 psi
+b) 70 psi
+c) 40 psi
+d) Equal pressure to steering axle and drive axle brakes.
+[Correct Answer]: d)
+[Explain]: 在 full application 时限制会被取消，前后压力相同。
+[Reference]: DCV – Brake Balance
+
+#R13-16 Brake adjustment is best checked by?
+
+a) Looking for a drop in reservoir pressure of more than 12 psi
+b) Pulling the slack adjuster with a pry bar
+c) Rolling ahead and making a full brake application
+d) Driving up to speed and doing a full brake application
+[Correct Answer]: b)
+[Explain]: pry bar 检查 push rod travel 最准确。
+[Reference]: DCV – Adjustment
+
+#R13-17 What is the fine for operating a commercial vehicle with brakes improperly adjusted?
+
+a) $30
+b) $100
+c) Up to $2,000
+d) $150
+[Correct Answer]: c)
+[Explain]: 违规罚款最高可达 $2000。
+[Reference]: DCV – Regulations
+
+#R13-18 How can you tell how much air pressure is in the main reservoir?
+
+a) By consulting the one-way check valve.
+b) By consulting the reservoir pressure gauges mounted in the dashboard.
+c) Manually checking the reservoir using a pressure gauge.
+d) a and c
+[Correct Answer]: b)
+[Explain]: dashboard gauge 显示 reservoir pressure。
+[Reference]: DCV – Gauges
+
+#R13-19 A trailer hand valve should only be used to?
+
+a) Descend a steep downgrade
+b) Stop at traffic lights
+c) To test trailer service brakes
+d) Prevent the trailer from skidding
+[Correct Answer]: c)
+[Explain]: hand valve 仅用于测试 trailer brakes。
+[Reference]: DCV – Hand Valve
+
+#R13-20 Who is ultimately responsible for the brakes on a vehicle?
+
+a) The maintenance crew.
+b) The driver.
+c) The owner.
+d) The owner and mechanical team.
+[Correct Answer]: b)
+[Explain]: driver 对 vehicle safety 负最终责任。
+[Reference]: DCV – Driver Responsibility
+
+#R13-21 What is one advantage of a dual air brake system?
+
+a) In the event of a total failure of one system, the driver is still able to stop the vehicle.
+b) Only one reservoir needs to be maintained.
+c) Shorter stopping distances and brake lag time.
+d) The driver does not need to stop in the event of low air warning.
+[Correct Answer]: a)
+[Explain]: 双回路提供 redundancy。
+[Reference]: DCV – Dual System
+
+#R13-22 How are the spring brakes affected when brakes are out of adjustment?
+
+a) They are unaffected
+b) More powerful for parking
+c) Spring will drag
+d) Less powerful for parking
+[Correct Answer]: d)
+[Explain]: 调整不良降低制动力。
+[Reference]: DCV – Adjustment
+
+#R13-23 The most common cause of air loss in a tractor-trailer system is?
+
+a) A leaking tractor protection valve
+b) Defective glad hand seals
+c) A leaking two-way check valve
+d) Faulty governor
+[Correct Answer]: b)
+[Explain]: glad hand seals 漏气最常见。
+[Reference]: DCV – Connections
+
+#R13-24 If there was a slight air leak coming from the glad hands the driver might be able to correct this condition by?
+
+a) Reducing the pressure to the trailer system
+b) Taking the glad hands apart and checking the seals for dirt, tears or grit
+c) Wrapping the glad hands with duct tape
+d) Switching the position of the service and supply lines
+[Correct Answer]: b)
+[Explain]: 清洁或更换 seals。
+[Reference]: DCV – Maintenance
+
+#R13-25 Where would an air dryer be installed in an air brake system?
+
+a) In the compressor discharge line between the compressor and the first reservoir.
+b) Between the governor and the compressor.
+c) Immediately before the foot valve.
+d) On the instrument panel next to the reservoir pressure gauges.
+[Correct Answer]: a)
+[Explain]: air dryer 安装在 compressor 后。
+[Reference]: DCV – Air Dryer
+
+#R13-26 How much pressure should you apply to the foot valve when measuring slack adjustment using the applied stroke method?
+
+a) 40 psi
+b) 150 psi
+c) 300 psi
+d) 90 to 100 psi
+[Correct Answer]: d)
+[Explain]: 标准应用压力 90–100 psi。
+[Reference]: DCV – Adjustment
+
+#R13-27 Air lines should be attached to the trailer without spring brakes prior to backing under, then?
+
+a) Charge trailer then apply trailer parking brakes
+b) Release all spring brakes hand valve full on
+c) Release spring brakes back under trailer
+d) Release spring brakes full foot valve application
+[Correct Answer]: a)
+[Explain]: 先充气再确保制动。
+[Reference]: DCV – Coupling
+
+#R13-28 If the service line to the trailer ruptures or develops a leak while the vehicle is in service, the trailer brakes will apply immediately?
+
+a) When the driver applies the brakes by his hand or foot valve
+b) Immediately
+c) When the pressure in the system drops to between 20 psi and 45 psi
+d) When the pressure in the system drops to between 80 psi and 60 psi
+[Correct Answer]: c)
+[Explain]: pressure drop 触发紧急制动。
+[Reference]: DCV – Emergency System
+
+#R13-29 A pressure protection valve is used to?
+
+a) Cut down braking forces under slippery conditions
+b) Protect the reservoir from over-pressurization
+c) Prevent the trailer brakes from dynamiting
+d) Prevent failure of air accessories from totally depleting reservoirs
+[Correct Answer]: d)
+[Explain]: 防止 accessories 消耗主系统气压。
+[Reference]: DCV – Protection Valve
+
+#R13-30 If you are adjusting an automatic slack adjuster that has hexagonal head adjusting bolt, you must rotate the adjusting bolt in which direction?
+
+a) Clockwise.
+b) Counter-clockwise.
+c) Up.
+d) Down.
+[Correct Answer]: a)
+[Explain]: hex bolt 顺时针调整。
+[Reference]: DCV – Adjustment
+
+#R14-01 What is an advantage of automatic slack adjusters?
+
+a) They automatically adjust themselves during full brake applications provided they are working correctly.
+b) They automatically clean out the moisture and oil from the reservoir.
+c) They require manual adjustment less frequently.
+d) They don't need to be checked by a qualified mechanic.
+[Correct Answer]: a)
+[Explain]: Automatic slack adjusters（自动间隙调节器）的设计目的，是在正常工作时通过 full brake applications（完全制动施加）自动补偿 brake lining wear（制动衬片磨损）带来的间隙变化，从而帮助保持 proper adjustment（正确调整状态）。它们并不是“完全不用检查”的装置，也不会清除 reservoir（储气罐）中的 moisture（湿气）或 oil（油污）。题目问的是“advantage（优点）”，最准确的就是它能在 working correctly（工作正常）时自动完成调整。
+[Reference]: DCV – Foundation Brakes / Slack Adjusters
+
+#R14-02 A leak at the hand valve exhaust port when the foot valve is applied would most likely be caused by?
+
+a) A defective hand valve
+b) A ruptured diaphragm in the tractor protection valve
+c) A defective two-way check valve
+d) A defective one-way check valve
+[Correct Answer]: c)
+[Explain]: 在 tractor-trailer air system（牵引车—挂车空气系统）里，hand valve（手控阀）和 foot valve（脚阀）都可能向 trailer service circuit（挂车行车制动回路）提供控制信号。Two-way check valve（双向止回阀）的作用，是在两个输入之间自动选择较高压力的一路，同时防止一路空气回流到另一路。如果 foot valve 应用时，空气反而从 hand valve exhaust port（手控阀排气口）泄出，最典型原因就是 two-way check valve 失效，导致本应被隔离的压力串回 hand valve 一侧并从排气口漏出。
+[Reference]: DCV – Valves / Trailer Control Valves
+
+#R14-03 What would be the most likely cause of a safety valve "blowing off"?
+
+a) Governor out of adjustment
+b) Exhaust or inlet valves stuck open
+c) Defective governor
+d) Defective inlet valve
+[Correct Answer]: c)
+[Explain]: Safety valve（安全阀）的作用，是在 system pressure（系统压力）异常升高时自动释放空气，防止 over-pressurization（过压）。正常情况下，governor（调压器）会控制 compressor（压缩机）的 cut-out（停止泵气点）和 cut-in（恢复泵气点）。如果 governor defective（调压器失效），compressor 可能持续建立过高压力，最终触发 safety valve “blowing off”（安全阀放气）。因此，最可能的根本原因是 governor 本身故障，而不是单纯的正常调节偏差。
+[Reference]: DCV – Air Supply System / Governor / Safety Valve
+
+#R14-04 Tractor protection systems must shut off air supply to the trailer when?
+
+a) The service line ruptures
+b) The driver pulls the parking control valve
+c) The supply line ruptures
+d) Main reservoir pressure drops to between 20 psi and 45 psi
+[Correct Answer]: d)
+[Explain]: Tractor protection system（牵引车保护系统）的核心作用，是在 trailer（挂车）发生严重漏气或分离时，保护 tractor（牵引车）自身不要把全部 air pressure（气压）都损失掉。根据 DCV 逻辑，当 main reservoir pressure（主储气罐压力）降到大约 20 psi 到 45 psi 的区间时，系统必须自动 shut off air supply to the trailer（切断向挂车供气），否则 tractor 侧也会继续失压，最终影响自身 braking capability（制动能力）。
+[Reference]: DCV – Tractor Protection System / Trailer Supply
+
+#R14-05 Regardless of maintenance policies, who is responsible for ensuring the brakes of a vehicle are in working order before the vehicle is placed into operation?
+
+a) The driver.
+b) The mechanic.
+c) The owner.
+d) Both the owner and mechanic.
+[Correct Answer]: a)
+[Explain]: 即使 owner（车主）负责维护、mechanic（技师）负责维修，driver（驾驶员）仍然是把车辆实际开上路的人，因此在 vehicle is placed into operation（车辆投入运行）之前，driver 必须确认 brakes（制动）处于 working order（可正常工作状态）。这体现的是 final responsibility（最终责任）原则：别人可以维修和管理，但决定“这辆车现在能不能安全上路”的最终责任在驾驶员。
+[Reference]: DCV – Driver Responsibility / Pre-trip Inspection
+
+#R14-06 If the foot valve and hand valve are operated at the same time, the trailer application pressure will be?
+
+a) The greater pressure between the hand valve and the foot valve
+b) The foot valve pressure
+c) The hand valve pressure
+d) The pressure in the primary reservoir
+[Correct Answer]: a)
+[Explain]: Trailer service brakes（挂车行车制动）既可以由 foot valve（脚阀）控制，也可以由 hand valve（手控阀）单独控制。在两者同时作用时，系统不会简单相加，而是由 valve arrangement（阀门布置）决定 trailer application pressure（挂车制动施加压力）取其中较高的一路。这样设计是为了确保 trailer brakes 得到足够且明确的控制信号，而不会因两个不同来源同时工作而产生混乱或压力抵消。
+[Reference]: DCV – Valves / Hand Valve / Foot Valve
+
+#R14-07 The main purpose of the tractor protection valve is?
+
+a) To apply the trailer brakes if the trailer breaks away
+b) To apply the tractor brakes if the trailer breaks away
+c) To apply both the tractor and the trailer brakes if the trailer breaks away
+d) To prevent total loss of air from the tractor if the trailer breaks away
+[Correct Answer]: d)
+[Explain]: Tractor protection valve（牵引车保护阀）的名字已经说明重点：它首先“protects the tractor（保护牵引车）”。如果 trailer breaks away（挂车脱离）或 supply line（供气线）严重泄漏，最危险的情况是 tractor 的 air supply（气源）被持续抽空。这个阀门的主要目的，就是自动切断相关气路，prevent total loss of air from the tractor（防止牵引车空气全部流失），从而保住 tractor 自身的 braking system。
+[Reference]: DCV – Tractor Protection Valve
+
+#R14-08 The only way to be sure that your brakes are properly adjusted is by:
+
+a) Feeling the response on a light air application
+b) Checking the pressure gauges
+c) Physically checking the light air application
+d) Physically checking each brake
+[Correct Answer]: d)
+[Explain]: Brake adjustment（制动调整）不能靠“感觉差不多”来判断。Light air application（轻踩刹车）的手感、pressure gauges（压力表）读数，都不能告诉你每个 brake assembly（制动总成）的实际 push rod travel（推杆行程）是否合格。题目强调 the only way to be sure（唯一能确定的方法），因此答案必须是 physically checking each brake（逐个制动器进行实际检查），这符合 DCV 对 foundation brake inspection（基础制动检查）的要求。
+[Reference]: DCV – Foundation Brakes / Adjustment Check
+
+#R14-09 If slack adjuster travel is checked on a Type 30 brake chamber with a manual slack adjuster during a brake application, travel should not exceed?
+
+a) One and a half inches
+b) Three quarters of an inch
+c) Two and a half inches
+d) One and three quarter inches
+[Correct Answer]: d)
+[Explain]: 这题考的是 applied stroke（施压行程），不是 free play（自由行程）。题目明确说是在 brake application（制动施加时）检查，而且是 Type 30 brake chamber 配 manual slack adjuster。按照 DCV 的行程标准，这种组合的 push rod travel（推杆行程）不能超过 1 3/4 inches。若超过此值，说明 brake is out of adjustment（制动调整不当），可能导致 braking force（制动力）不足，严重时还可能出现 bottoming out（触底）风险。
+[Reference]: DCV – Foundation Brakes / Push Rod Travel Limits
+
+#R14-10 A quick release valve may be used with spring brakes to:
+
+a) Allow faster application of spring brakes
+b) Allow faster release of spring brakes
+c) Allow automatic application of spring brakes
+d) Both a and b.
+[Correct Answer]: a)
+[Explain]: 这题你要求我忠于题库答案，因此我按题库保留 a)。题库逻辑是：quick release valve（快放阀）在某些 spring brake arrangement（弹簧制动布置）中可帮助气路动作更迅速，从而 allow faster application（更快施加）spring brakes。这里我不改题库答案，只按题库答案来写解释。
+[Reference]: DCV – Valves / Spring Brake Circuits
+
+#R14-11 Why are drivers required to complete a trip inspection report?
+
+a) For the owner's records.
+b) This is a requirement under the Motor Vehicle Act Regulations.
+c) For the vehicle maintenance log.
+d) For the driver's records.
+[Correct Answer]: b)
+[Explain]: Trip inspection report（行程检查报告）不是“顺手记一下”的内部表格，而是法律和法规层面的要求。题目里最关键的词是 required（被要求必须完成），因此正确原因不是为了谁留档，而是 because it is a requirement under the Motor Vehicle Act Regulations（因为机动车法规要求必须这样做）。
+[Reference]: DCV – Trip Inspection / Regulations
+
+#R14-12 When should a driver adjust automatic slack adjusters?
+
+a) When these are found to be out-of-adjustment.
+b) Every day during the pre-trip inspection.
+c) Only when stuck in Thunderbay, ON or Gatineau, QC.
+d) Only as an emergency procedure that will allow the driver to get to a shop to have it fixed by a qualified technician.
+[Correct Answer]: d)
+[Explain]: Automatic slack adjusters（自动间隙调节器）原则上不应作为日常手动调整项目，因为“自动”本身意味着系统应自行维持正常 adjustment（调整）。如果它已经 out-of-adjustment（失调），通常说明系统有故障。DCV 逻辑是：driver 只应在 emergency procedure（紧急情况下）临时处理，以便把车辆安全地带到 shop（维修点），然后由 qualified technician（合格技师）做真正的修复。
+[Reference]: DCV – Automatic Slack Adjusters / Maintenance
+
+#R14-13 What will occur if the supply line is ruptured?
+
+a) The tractor brakes will apply immediately
+b) All air from the trailer reservoirs will be lost
+c) The trailer brakes will apply immediately
+d) The relay valve will apply the services brakes
+[Correct Answer]: c)
+[Explain]: Supply line（供气线，也常与 trailer emergency side 相关）一旦 ruptured（破裂），trailer side 会把这视为严重 air loss（失压）情况，从而触发 emergency braking action（紧急制动动作）。因此最直接结果是 the trailer brakes will apply immediately（挂车制动会立即施加），而不是先等驾驶员再去踩 foot valve。
+[Reference]: DCV – Trailer Supply Line / Emergency Braking
+
+#R14-14 In a dual circuit air system, what valve is used to protect the primary circuit from an air loss in the secondary circuit?
+
+a) The one-way check valve
+b) The dual circuit foot valve
+c) The two-way check valve
+d) The tractor protection valve
+[Correct Answer]: c)
+[Explain]: 在 dual circuit air system（双回路气刹系统）中，primary circuit 和 secondary circuit 必须尽量避免互相拖累。Two-way check valve（双向止回阀）可根据哪一路有可用压力来选择气源，同时阻止故障一路把另一侧压力拖空。因此，题目问“保护 primary circuit 免受 secondary circuit 失压影响”，对应的就是 two-way check valve。
+[Reference]: DCV – Dual Circuit Systems / Check Valves
+
+#R14-15 How often should you inspect your vehicle?
+
+a) Once a month.
+b) Before the vehicle is used each day and at the end of the final trip each day.
+c) First thing in the morning.
+d) Before each trip.
+[Correct Answer]: b)
+[Explain]: 题目考的是法规要求，而不是驾驶员习惯。According to the rule structure in DCV，vehicle inspection（车辆检查）至少应在车辆每日首次使用前进行，同时在当天最后一趟结束后再完成相应记录。选项 b 比“first thing in the morning”更完整，也比“before each trip”更贴近题库给出的正式要求。
+[Reference]: DCV – Trip Inspection Requirements
+
+#R14-16 When are you required to complete a pre-hill inspection?
+
+a) Before every hill.
+b) At the start of the trip if you will be driving mountainous roads.
+c) When you see a posted sign instructing you to check brakes before a steep hill.
+d) All of the above.
+[Correct Answer]: c)
+[Explain]: Pre-hill inspection（坡前检查）并不是“见坡就做”或“一天开始统一做一次”这么简单。题目问的是 required（被要求必须做）的条件，因此关键在 posted sign（路边标志）是否明确 instructing you to check brakes（要求你检查制动）。这类标志具有强制性，所以答案是 c)。
+[Reference]: DCV – Downgrade Safety / Regulatory Signs
+
+#R14-17 If the speed of a vehicle is doubled, braking power needed to stop must be increased by:
+
 a) 2 times
 b) 4 times
 c) 6 times
 d) 8 times
-[Correct Answer] 正确答案： d)
-[Explain] 解释：Weight（重量）翻倍则能量翻 2 倍，Speed（速度）翻倍则能量翻 4 倍。因此两者同时翻倍时，总能量（所需的制动力）增加为 2 × 4 = 8 倍。
-[Page] 参考手册页码：149
+[Correct Answer]: b)
+[Explain]: 这题考的是 braking physics（制动物理）。Vehicle kinetic energy（车辆动能）与 speed 的平方相关，因此如果 speed is doubled（速度翻倍），要在相同 stopping distance（停车距离）内停下来，所需 braking power 必须增加到 4 times。不是 2 倍，也不是 8 倍。
+[Reference]: DCV – Braking Physics
 
-#R2-14 When should a driver use the manual front wheel limiting valve?
-a) When necessary on slippery roads, to reduce front wheel application pressure by 50%
-b) When necessary on slippery roads, to reduce front wheel application pressure up to 60 psi
-c) When necessary on slippery roads, to cut out front wheel braking
-[Correct Answer] 正确答案： a)
-[Explain] 解释：在 Slippery roads（湿滑路面）上，驾驶员可以使用手动前轮限制阀将前轮的制动压力减少 50%，以降低前轮锁死和失去转向能力的风险。
-[Page] 参考手册页码：182
+#R14-18 Proper air brake adjustment on a vehicle equipped with foundation brakes is determined by?
 
-#R2-15 How often should the reservoirs be drained?
-a) Daily
-b) Weekly
-c) Monthly, or more often under extreme conditions
-d) Daily, or more often under extreme conditions
-[Correct Answer] 正确答案： d)
-[Explain] 解释：Reservoirs（储气罐）必须 Daily（每天）进行排水。在极端环境下（如严寒或高湿度），可能需要更频繁地执行此操作。
-[Page] 参考手册页码：156
+a) The size of the brake chambers
+b) The length of the slack adjusters
+c) Thickness of brake lining
+d) The brake chamber push rod travel
+[Correct Answer]: d)
+[Explain]: Proper air brake adjustment（正确的气刹调整）并不是看 brake chamber 多大、slack adjuster 多长，或 lining 有多厚，而是看 brake chamber push rod travel（制动气室推杆行程）是否在允许范围内。因为实际制动效果最终体现在 push rod 行程是否过大、是否还能有效驱动 foundation brakes。
+[Reference]: DCV – Foundation Brakes / Push Rod Travel
 
-#R3-1 What method of checking brakes do roadside inspectors use?
-a) Pry bar
-b) Fanning the brakes
-c) Applied
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Roadside inspectors（路检员）通常使用 Applied stroke method（施压行程法）。他们会要求驾驶员施加 90 到 100 psi 的制动压力，然后测量 Pushrod（推杆）伸出的距离。
-[Page] 参考手册页码：199
+#R14-19 Which will cause trailer brakes to apply immediately?
 
-#R3-2 What does the air brake term “bottom out” mean?
-a) The system is completely drained of air
-b) The foot valve travels to the floor when applied
-c) Pushrod has traveled as far as it can and the base plate has contacted the brake chamber body
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Bottom out（触底）是指 Pushrod（推杆）已经移动到了其最大行程极限，此时内部的压力板已经接触到了 Brake chamber（制动气室）的底壳，导致无法再进一步施加制动力。
-[Page] 参考手册页码：195
+a) Loss of pressure to the service line
+b) Loss of pressure to the supply line
+c) Loss of pressure to the hand valve
+d) A defective one-way check valve
+[Correct Answer]: b)
+[Explain]: Trailer brakes 的 emergency application（紧急施加）通常与 supply line（供气线）失压直接相关。因为这条线路一旦压力丢失，系统会把情况视为 trailer breakaway 或严重故障，从而使 trailer brakes apply immediately（挂车制动立刻施加）。
+[Reference]: DCV – Trailer Emergency Braking / Supply Line
 
-#R3-3 How can spring brakes be released without the use of air pressure?
-a) They can’t - they need air to release
-b) By caging the brakes
-c) By compounding the brakes
-[Correct Answer] 正确答案： b)
-[Explain] 解释：在没有气压的情况下，可以通过机械方式 Caging（锁闭/手动压缩）弹簧。这通常涉及使用 T-bolt（T型螺栓）将 Spring brake（弹簧制动器）内的强力弹簧压缩并锁住。
-[Page] 参考手册页码：173
+#R14-20 Which valve is octagon-shaped (eight-sided), red and located on the dash in the truck?
 
-#R3-4 How can long stroke brake chambers be identified?
-a) Bigger diaphragm size
-b) Longer distance from brake chamber to slack adjustor
-c) Square shaped inlet ports and/or trapezoid shaped name tag on the clamp bolt
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Long stroke brake chambers（长行程制动气室）可以通过外观特征识别，例如 Square shaped inlet ports（方形进气口）或位于紧固螺栓上的 Trapezoid shaped name tag（梯形铭牌）。
-[Page] 参考手册页码：194
+a) Treadle valve
+b) Parking valve
+c) Two-way check valve
+d) Trailer Supply Valve
+[Correct Answer]: d)
+[Explain]: 这题考的是 dashboard control identification（驾驶室控制识别）。Trailer Supply Valve（挂车供气阀）通常是红色、八边形，并位于 dash（仪表台）上。它与 parking valve、treadle valve 在外观和位置上都不同，因此这是一个识别类题目。
+[Reference]: DCV – Driver Controls / Trailer Supply Valve
 
-#R3-5 A quick release valve used for spring brakes gives?
-a) Quicker release of brakes
-b) Quicker application of brakes
-c) Stronger holding power
-[Correct Answer] 正确答案： a)
-[Explain] 解释：用于弹簧制动器的 Quick release valve（快速释放阀）旨在让空气更迅速地排出，从而实现更快速地 Release（解除/松开）驻车制动，防止拖滞。
-[Page] 参考手册页码：162
+#R14-21 How do you know you are turning the adjusting bolt in the correct direction when adjusting a manual slack adjuster?
 
-#R3-6 The only way to be sure your brakes are adjusted properly is?
-a) Feeling the response on a light brake application
-b) By physically checking each slack adjuster
-c) By checking the drop in the pressure gauges
-[Correct Answer] 正确答案： b)
-[Explain] 解释：确保刹车调整（Adjusted）正确的唯一可靠方法是进行 Physically checking（实地检查/物理检查），即测量每个 Slack adjuster（间隙调节器）的推杆行程。
-[Page] 参考手册页码：196
+a) The slack adjuster doesn't move.
+b) The slack adjuster will pull the pushrod out of the chamber.
+c) The cam rotates in the same direction as if the brakes were being applied.
+d) The slack adjuster pushes the pushrod into the chamber.
+[Correct Answer]: c)
+[Explain]: 调 manual slack adjuster（手动间隙调节器）时，正确方向不是单纯背“顺时针/逆时针”，而是看 S-cam / cam rotation（凸轮旋转）是否与 brakes being applied（制动施加时）方向一致。这个判断方法比机械记忆方向更可靠，因为不同结构中螺栓朝向可能不同。
+[Reference]: DCV – Manual Slack Adjuster Adjustment
 
-#R3-7 One of the most common causes of runaway trucks and brake failure resulting in crashes are?
-a) Brakes out of adjustment
-b) Overheated brake drums
-c) Loss of air pressure
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Brakes out of adjustment（刹车失调/间隙过大）是导致货车失控（Runaway）和制动失效最常见的原因。这会导致推杆行程过长，在制动器受热时会迅速失去制动效能。
-[Page] 参考手册页码：190
+#R14-22 Improper angle between slack adjuster and chamber push rod (when applied) can be corrected by:
 
-#R3-8 How are the spring parking brakes affected when the brakes are out of adjustment?
-a) They are unaffected
-b) More powerful for parking
-c) Less powerful for parking
-[Correct Answer] 正确答案： c)
-[Explain] 解释：如果刹车机械间隙失调（Out of adjustment），Spring parking brakes（弹簧驻车制动）的效能也会降低，因为弹簧力必须通过更长的推杆行程才能作用于刹车鼓，导致 Holding power（保持力）变弱。
-[Page] 参考手册页码：168
+a) Pumping the brakes.
+b) Relining the brakes.
+c) Changing the length of the push rod.
+d) Adjusting the brakes.
+[Correct Answer]: d)
+[Explain]: 当 slack adjuster 与 chamber push rod 在 applied position（施压状态）下的角度不正确时，通常反映的是 brake adjustment（制动调整）不正确，而不是要去改 push rod 长度或直接换 lining。正确做法是 adjust the brakes（重新调整制动），让几何关系恢复到正确工作范围。
+[Reference]: DCV – Brake Geometry / Slack Adjuster Adjustment
 
-#R3-9 You should release the spring brakes before making a full brake application because:
-a) The brakes will apply too quickly
-b) The compounding force may damage the slack adjustor or other brake components
-c) You will not get a true reading
-[Correct Answer] 正确答案： b)
-[Explain] 解释：如果在施加服务制动（空气压力）的同时未释放弹簧制动，会产生 Compounding force（复合力）。这种叠加的力量可能会 Damage（损坏）间隙调节器或其他传动部件。
-[Page] 参考手册页码：170
+#R14-23 The normal pressure in the airbrake system is controlled by the:
 
-#R3-10 What is the fine for brakes being out of adjustment?
-a) Up to $1,000 per brake
-b) Up to $2,000
-c) 30 days in jail
-[Correct Answer] 正确答案： b)
-[Explain] 解释：在 BC 省，如果车辆被发现刹车失调，驾驶员可能面临高达 $2,000 的 Fine（罚金），且车辆会被判定为 Out-of-service（禁止行驶）。
-[Page] 参考手册页码：190
+a) Pressure relief valve
+b) Safety valve
+c) Governor
+d) All of the above
+[Correct Answer]: c)
+[Explain]: Airbrake system 的 normal pressure（正常工作压力）由 governor（调压器）控制。Pressure relief valve 或 safety valve 主要是异常情况下的保护装置，不负责日常让系统在正常 cut-in / cut-out 区间内工作。因此 controlling normal pressure 的核心部件是 governor。
+[Reference]: DCV – Governor / Air Pressure Control
 
-#R3-11 What is the purpose of the red marker on the pushrod of some brake chambers?
-a) Manufacturers trade mark
-b) Identifies the push rod is fully coming out properly
-c) Brake is badly out of adjustment and needs attention immediately
-[Correct Answer] 正确答案： c)
-[Explain] 解释：推杆上的 Red marker（红色标记/红圈）是视觉指示器。如果在制动时看到红标露出来，表示该刹车已严重 Out of adjustment（失调），必须立即进行维护。
-[Page] 参考手册页码：194
+#R14-24 "Brake lag" is approximately 4/10 of a second in a well-maintained brake system; What is meant by the term brake lag?
 
-#R3-12 Braking systems that have automatic slack adjusters:
-a) Do not need to be checked for adjustment
-b) Must be checked daily for correct adjustment
-c) Should check occasionally for correct adjustment
-[Correct Answer] 正确答案： b)
-[Explain] 解释：即使配备了 Automatic slack adjusters（自动间隙调节器），驾驶员仍必须 Daily（每天）检查其 Adjustment（调整情况），因为自动调节器也可能失效。
-[Page] 参考手册页码：201
+a) The time it takes from the moment a hazard is recognized to the time the brakes are applied
+b) The actual time the vehicle takes to stop after the brakes are applied
+c) The time the air pressure takes to fully apply the brakes after the foot valve is depressed
+d) The time it takes to stop the vehicle after the hazard is recognized
+[Correct Answer]: c)
+[Explain]: Brake lag（制动迟滞）不是驾驶员反应时间，也不是整个车辆停止所需时间。它专门指：在 foot valve is depressed（踩下脚阀）之后，air pressure 通过系统传递并 fully apply the brakes（把制动完全施加）所花的时间。在维护良好的 air brake system 中，这个时间大约是 4/10 秒。
+[Reference]: DCV – Brake Lag / Stopping Distance Components
 
-#R3-13 Spring parking brakes are most useful as:
-a) A reserve brake if the service brakes fail
-b) A parking brake
-c) An emergency stopping device
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Spring parking brakes（弹簧驻车制动）最主要的用途是作为 Parking brake（驻车制动），用于在车辆停稳后保持其静止。
-[Page] 参考手册页码：168
+#R14-25 In the event of air loss in one circuit of a dual circuit air brake system, the remaining circuit will?
 
-#R3-14 When checking slack adjuster push rod travel by pry bar, travel must not exceed:
-a) 1 ½ inch
-b) 2 ½ inch
-c) ¾ inch
-[Correct Answer] 正确答案： c)
-[Explain] 解释：使用 Pry bar（撬棍）检查推杆的 Free play（自由行程）时，对于手动间隙调节器，行程不得超过 ¾ inch（3/4 英寸）。
-[Page] 参考手册页码：197
-
-#R3-15 How is heat generated by the brakes dissipated?
-a) Dissipated by the speed of the vehicle
-b) Absorbed by the brake drums and dissipated into the atmosphere
-c) Dissipated by cooling the brake shoes down
-[Correct Answer] 正确答案： b)
-[Explain] 解释：制动时产生的 Heat（热量）会被 Brake drums（刹车鼓）吸收，然后通过与外界空气接触散发（Dissipated）到大气中。
-[Page] 参考手册页码：151
-
-#R3-16 If one brake is poorly adjusted, what effect could it have on the remaining sets of brakes?
-a) Remaining brakes would have to increase their share of the braking
-b) Remaining brakes automatically equalize
-c) There would be no noticeable change on the remaining brakes
-[Correct Answer] 正确答案： a)
-[Explain] 解释：如果一个刹车失调，它产生的制动力就会减弱，从而迫使 Remaining brakes（剩余的刹车）承担更多的制动负荷，这会导致这些正常的刹车更容易 Overheat（过热）。
-[Page] 参考手册页码：190
-
-#R3-17 In which direction should the adjusting nut be turned to tighten brakes - bring the shoes closer to the drum?
-a) Clockwise
-b) Same direction as the S-cam shaft turns
-c) Direction that makes the S-cam shaft rotate in the same direction as a brake application
-[Correct Answer] 正确答案： c)
-[Explain] 解释：手动调节刹车时，必须转动调节螺母，使 S-cam shaft（S凸轮轴）向着与 Brake application（施加制动/踩刹车）时相同的方向旋转。
-[Page] 参考手册页码：198
-
-#R4-1 If there are no dead end couplers, what can a driver do to prevent dirt from getting in the air lines?
-a) Remove the glad hands and store in vehicle
-b) Connect the glad hands together
-c) The vehicle should not be driven
-[Correct Answer] 正确答案： b)
-[Explain] 解释：如果没有 Dead end couplers（死端联结器/防尘盖），驾驶员应将两条气路控制线的 Glad hands（握手式联结器）相互连接，以防止 Dirt（污垢）和水分进入系统。
-[Page] 参考手册页码：174
-
-#R4-2 What do we call brake chambers in an air-over-hydraulic system?
-a) Pressure intensifiers
-b) Modulators
-c) Two-way check valves
-[Correct Answer] 正确答案： a)
-[Explain] 解释：在气推液（Air-over-hydraulic）系统中，气压作用于 Pressure intensifiers（增压器），将气压转换为液压来激活制动器。
-[Page] 参考手册页码：185
-
-#R4-3 When must a driver inspect the vehicle?
-a) Before the first drive of the day
-b) Every 24 hours
-c) Before the first drive of the day, and after the last run of the day
-d) When the brakes are out of adjustment
-[Correct Answer] 正确答案： c)
-[Explain] 解释：根据法规，驾驶员必须在每天第一次行驶前（Pre-trip）和每天最后一次行驶后（Post-trip）进行 Vehicle inspection（车辆检查）。
-[Page] 参考手册页码：189
-
-#R4-4 Which air line supplies full tractor air pressure to the trailer?
-a) Control line
-b) Supply line
-c) Primary line
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Supply line（供应管路/紧急线）负责将拖头的全额气压输送到拖车，用于给拖车储气罐充气并释放拖车的弹簧制动器。
-[Page] 参考手册页码：174
-
-#R4-5 Another name for the spring parking brake emergency release system is?
-a) Pop-off valve
-b) California spring parking brake system
-c) Safety actuator brake
-[Correct Answer] 正确答案： b)
-[Explain] 解释：这种带有独立储气罐、用于在主系统失效时临时释放弹簧刹车的系统，通常被称为 California spring parking brake system（加州弹簧驻车制动系统）。
-[Page] 参考手册页码：171
-
-#R4-6 The spring parking brake emergency release system will allow a driver to:
-a) Move a disabled vehicle to a safe location
-b) Slowly drive the disabled vehicle to a shop
-c) Operate in California
-[Correct Answer] 正确答案： a)
-[Explain] 解释：该紧急释放系统的唯一目的是让驾驶员能够释放弹簧刹车，从而将 Disabled vehicle（故障车辆）移动到安全位置，而不是继续长期驾驶。
-[Page] 参考手册页码：171
-
-#R4-7 Signs posted in advance of a down grade, instructing drivers of trucks to stop and inspect their brakes are:
-a) Regulatory signs
-b) Warning signs
-c) Advisory signs
-[Correct Answer] 正确答案： a)
-[Explain] 解释：要求货车停车检查刹车的告示牌属于 Regulatory signs（指令性标志/强制标志），驾驶员必须遵照执行，否则属于违法。
-[Page] 参考手册页码：151
-
-#R4-8 In a dual air system, what valve is used to protect the primary system from an air loss in the secondary?
-a) One-way check valve
-b) Two-way check valves
-c) Relay valve
-[Correct Answer] 正确答案： b)
-[Explain] 解释：在双回路系统中，Two-way check valve（双向止回阀/穿梭阀）用于隔离故障回路，确保未受损的回路（如 Primary system）能继续操作相关部件。
-[Page] 参考手册页码：161
-
-#R4-9 With dual air systems - In the event of air loss in one air brake system, the remaining air brake system will:
 a) Activate the spring brakes
-b) Continue to operate normally
+b) Continue to operate
 c) Activate the trailer brakes
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Dual air systems（双回路气刹系统）的设计初衷就是当一个回路失效时，另一个 Remaining（剩余）回路能 Continue to operate（继续运行）以提供部分制动力。
-[Page] 参考手册页码：161
+d) Prevent steering tire lock up
+[Correct Answer]: b)
+[Explain]: Dual circuit air brake system（双回路气刹系统）的最大优点之一，就是 redundancy（冗余）。如果 one circuit 失压，the remaining circuit will continue to operate（剩余回路仍可继续工作），这样车辆不会因为单一回路故障而立刻丧失全部 braking ability。
+[Reference]: DCV – Dual Circuit Air Brake Systems
 
-#R4-10 How are service brakes tested to ensure they are working?
-a) While driving make a 100 psi brake application
-b) Roll forward slightly and apply them
-c) Hold the brake for 1 min. and read the gauge
-[Correct Answer] 正确答案： b)
-[Explain] 解释：测试 Service brakes（行车制动/服务制动）的方法是让车辆缓慢向前滚动，然后轻踩刹车，确认车辆能平稳停下且无拉偏现象。
-[Page] 参考手册页码：206
+#R14-26 The actual distance the vehicle travels after brakes are applied until the vehicle stops is:
 
-#R4-11 The speed at which a vehicle should travel on a downgrade is best determined by?
-a) The ability to make an emergency stop
-b) The length and percentage of the grade
-c) The condition of the road surface
-[Correct Answer] 正确答案： a)
-[Explain] 解释：在下坡（Downgrade）时，最安全的车速标准是确保在任何时刻都有能力进行 Emergency stop（紧急停车）。
-[Page] 参考手册页码：151
+a) Braking distance.
+b) Stopping distance
+c) Reaction time.
+d) 100 meters.
+[Correct Answer]: a)
+[Explain]: Braking distance（制动距离）是一个定义题。它只包括 brakes are applied（刹车已经施加）之后，到 vehicle stops（车辆完全停止）之前所走过的距离。它不包括 reaction distance（反应距离）或 brake lag distance。
+[Reference]: DCV – Stopping Distance Components
 
-#R4-12 On a long and steep downgrade, the best choice out of options listed for descending the hill is?
-a) Hard brake application, then release to cool brakes, then hard brake application again
-b) Steady brake application all the way down the hill of less than 10psi
-c) Use correct gear, and retarders if possible, and do not use your brakes
-[Correct Answer] 正确答案： c)
-[Explain] 解释：在长陡坡上，最佳策略是使用 Correct gear（正确的低档位）配合 Retarders（辅助制动器/缓速器），尽量避免使用 Service brakes（行车制动），以防刹车过热。
-[Page] 参考手册页码：151
+#R14-27 If 40 PSI is exerted against a diaphragm of 30 square inches, the maximum force exerted would be:
 
-#R4-13 What is the advantage of a dual air system?
-a) Extra braking force
-b) No difference in operation
-c) Prevents total loss of braking ability
-[Correct Answer] 正确答案： c)
-[Explain] 解释：双回路系统的主要 Advantage（优点）是防止系统单点故障导致 Total loss（完全丧失）制动能力。
-[Page] 参考手册页码：161
+a) 1200 lbs of force
+b) 70 lbs of force
+c) 7200 lbs of force
+d) 3500 lbs of force
+[Correct Answer]: a)
+[Explain]: 这题是 brake chamber force calculation（制动气室受力计算）。公式很直接：Force = Pressure × Area。40 PSI × 30 square inches = 1200 lbs of force。因此答案是 a)。这体现了 diaphragm（膜片）面积越大、压力越高，输出机械力越大的原理。
+[Reference]: DCV – Brake Chambers / Force Calculation
 
-#R4-14 The purpose of a spring brake modulator valve is?
-a) To adjust spring brakes automatically
-b) To reduce spring brake by 50% on slippery roads
-c) To provide controlled rear braking if primary system fails
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Spring brake modulator valve（弹簧制动调节阀）的作用是当主制动回路失效时，允许驾驶员通过脚踏阀利用弹簧刹车的力量来实现受控的后轮制动。
-[Page] 参考手册页码：165
+#R14-28 In a dual circuit system, the primary circuit supplies air to?
 
-#R4-15 What is a safety actuator parking brake?
-a) Parking brake applied by air found on some buses
-b) An automatic park brake
-c) A spring brake lock
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Safety actuator parking brake（安全执行器驻车制动）常见于某些公交车，它使用机械锁止机构将气压施加的制动力锁定在停车位置。
-[Page] 参考手册页码：171
+a) The front brake chambers
+b) The rear tractor brakes
+c) The main brake reservoir
+d) The tractor protection valve
+[Correct Answer]: b)
+[Explain]: 在很多标准 dual circuit layout（双回路布局）中，primary circuit（主回路）供给 rear tractor brakes（牵引车后制动），secondary circuit 则通常与 front brakes 相关。题目考的是典型回路分工，因此答案是 rear tractor brakes。
+[Reference]: DCV – Dual Circuit Layout
 
-#R4-16 Making a full brake application for 1 min in a tractor and semi trailer with a minimum of 90psi of air pressure, air loss should not exceed:
-a) 3 psi
-b) 4 psi
-c) 6 psi
-[Correct Answer] 正确答案： b)
-[Explain] 解释：对于拖头加挂半挂车（Tractor and semi trailer）组合，在施加全额制动时，每分钟的 Air loss（漏气量）不得超过 4 psi。
-[Page] 参考手册页码：209
+#R14-29 What two valves make up the tractor protection system?
 
-#R4-17 What is meant by the term “Friction”?
-a) Tension truck drivers have with other bad drivers
-b) The grip a tire has on the road surface
-c) The force resisting movement between two surfaces in contact (brake shoe and drum)
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Friction（摩擦力）是指两个接触面（如 Brake shoe 刹车蹄和 Drum 刹车鼓）之间产生阻碍运动的力量。
-[Page] 参考手册页码：147
+a) The trailer supply valve and the hand valve
+b) The trailer supply valve and the tractor protection valve
+c) The trailer supply valve and the foot valve
+d) The trailer supply valve and the relay emergency valve
+[Correct Answer]: b)
+[Explain]: Tractor protection system（牵引车保护系统）并不是单独只有一个 valve，而是由 trailer supply valve（挂车供气阀）和 tractor protection valve（牵引车保护阀）共同构成。一个负责驾驶员控制，另一个负责系统自动保护。
+[Reference]: DCV – Tractor Protection System
 
-#R4-18 If slack adjuster travel is checked while someone makes a brake application, travel should not exceed:
-a) ¾ of an inch
-b) 1 ¾ inches
-c) 2 inches
-[Correct Answer] 正确答案： c)
-[Explain] 解释：在施加制动（90-100 psi）的情况下，标准的 Type 30 气室推杆行程（Travel）通常不得超过 2 inches。
-[Page] 参考手册页码：200
+#R14-30 In a dual circuit air system, air from both the primary and secondary air reservoirs is directed to?
 
-#R4-19 In the dual air brake system, the primary air system supplied air to:
-a) The rear brake chambers
-b) The front brake chambers
-c) Both front and rear brake chambers
-[Correct Answer] 正确答案： a)
-[Explain] 解释：在标准双回路系统中，Primary air system（主气路系统）通常负责供应后轴的 Rear brake chambers（后制动气室）。
-[Page] 参考手册页码：161
-
-#R4-20 In a dual air brake system, air from both the primary and secondary air reservoirs is directed to:
 a) The relay valve
 b) The one-way check valve
 c) The foot valve
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Foot valve（脚踏阀）是一个双重阀门，同时接收来自主（Primary）和副（Secondary）储气罐的空气，以便控制两个独立的制动回路。
-[Page] 参考手册页码：161
-
-#R4-21 Best way to test the holding power of spring brakes is:
-a) Apply the spring brake while the vehicle is moving
-b) Apply spring brakes on a 20% grade to see if they hold the vehicle from rolling
-c) Tug test – try to move forward with spring brakes applied
-[Correct Answer] 正确答案： c)
-[Explain] 解释：测试驻车制动最常用的方法是 Tug test（拉力测试/拖拽测试），即在挂入低档时轻拉油门，确认弹簧刹车能 Hold（保持）住车辆。
-[Page] 参考手册页码：206
-
-#R4-22 If the brakes do not seem to be holding, even though sufficient air pressure is present, you should:
-a) Report the condition at the end of the trip
-b) Travel at a reduced speed
-c) Stop, check brakes and adjust if required
-[Correct Answer] 正确答案： c)
-[Explain] 解释：如果气压充足但制动力不足，通常意味着刹车失调或过热。驾驶员必须立刻 Stop（停车）检查并 Adjust（调整）。
-[Page] 参考手册页码：190
-
-#R4-23 What air brake components pulse the brakes to keep them from locking up causing the wheels to slide:
-a) ATC
-b) ABS
-c) ABC
-[Correct Answer] 正确答案： b)
-[Explain] 解释：ABS（Anti-lock Braking System，防抱死制动系统）通过快速脉冲式施压和放气，防止轮毂在制动时 Locking up（抱死/锁死）。
-[Page] 参考手册页码：185
-
-#R4-24 What is the main cause of brake fade at high temperatures?
-a) The air pressure becomes hot
-b) The brake linings expand away from the drums
-c) The brake drums expand away from the linings
-[Correct Answer] 正确答案： c)
-[Explain] 解释：高温导致 Brake fade（制动衰减）的主要物理原因是 Brake drums（刹车鼓）受热膨胀（Expand），使其内径变大并远离刹车蹄片，导致行程不足。
-[Page] 参考手册页码：151
-
-#R4-25 The final decision as to the condition of the vehicle's brakes should be made by:
-a) The Dispatcher
-b) The Mechanic
-c) The Driver
-d) The Police or CVSE officer
-[Correct Answer] 正确答案： c)
-[Explain] 解释：作为操作者，The Driver（驾驶员）对车辆的安全状况和制动效能负有最终法律责任和决策权。
-[Page] 参考手册页码：189
-
-#R4-26 If slack adjuster travel is checked while someone makes a brake application with automatic slack adjusters, travel should not exceed:
-a) ¾ of an inch
-b) 1 ¾ inches
-c) 2 inches
-[Correct Answer] 正确答案： c)
-[Explain] 解释：无论是否是自动间隙调节器，对于标准的 Type 30 气室，其施压后的推杆最大行程极限均为 2 inches。
-[Page] 参考手册页码：200
-
-#R4-27 What components do we have to add to a truck or tractor in order to haul an air-brake equipped trailer?
-a) Trailer air supply valve, air lines with gladhands, tractor protection valve
-b) Trailer foot brake adapter, trailer air supply valve, air lines with gladhands
-c) Trailer foot brake adapter, trailer air supply valve, air lines, quick connect hose clamps
-[Correct Answer] 正确答案： a)
-[Explain] 解释：要牵引气刹拖车，拖头必须配备 Trailer air supply valve（拖车供气阀/红纽扣）、带 Gladhands（握手接头）的气线以及保护主车的 Tractor protection valve（拖头保护阀）。
-[Page] 参考手册页码：176
-
-#R4-28 Automatic slack adjusters should only be adjusted by a qualified mechanic - but an emergency adjustment is made by turning the adjusting nut to tighten:
-a) Clockwise with a square adjusting nut
-b) Counter clockwise with a square adjusting nut
-c) The same direction as the S-cam shaft turns
-[Correct Answer] 正确答案： c)
-[Explain] 解释：即使是自动间隙调节器的紧急调整，其物理原则也一致：即必须使 S-cam shaft（S凸轮轴）向着制动时旋转的相同方向移动，以 Tighten（收紧/调紧）刹车。
-[Page] 参考手册页码：198
-
-#R6-1 If 40 psi is exerted against a diaphragm that is 30 square inches, what is the total force that would be exerted?
-a) 1200 lbs
-b) 1200 psi
-c) 1200 km/h
-d) 120 lbs
-[Correct Answer] 正确答案： a)
-[Explain] 解释：根据DCV，制动气室的力=压力×面积（Force = Pressure × Area）。40 psi × 30 in² = 1200 lbs。
-[Page] 参考手册页码：147
-
-#R6-2 Where would an air dryer be installed in an air brake system?
-a) between the compressor and the first reservoir
-b) inside the wet tank
-c) at the brake chambers
-d) on all service tanks
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Air dryer安装在压缩机与第一个储气罐（wet tank）之间，用于去除水分与油分。
-[Page] 参考手册页码：139
-
-#R6-3 How can a driver test the air dryer to ensure it is working properly?
-a) air dryers can only be tested by a qualified mechanic
-b) open the wet tank and check for moisture
-c) air dryers are no longer used for air brake systems
-d) by doing a tug test
-[Correct Answer] 正确答案： b)
-[Explain] 解释：检查air dryer的方法是打开wet tank，若含水量少说明干燥器正常。
-[Page] 参考手册页码：139
-
-#R6-4 When air pressure reaches maximum level the compressor is:
-a) stopped
-b) loaded
-c) uncoupled
-d) unloaded
-[Correct Answer] 正确答案： d)
-[Explain] 解释：当气压达到cut-out，governor使compressor进入unloaded状态，不再压缩空气。
-[Page] 参考手册页码：136
-
-#R6-5 If the reservoir gauge reads pressure available for service, what does an application gauge read?
-a) wet tank pressure
-b) compressor performance
-c) moisture
-d) actual pressure being applied
-[Correct Answer] 正确答案： d)
-[Explain] 解释：Application gauge显示踩下制动时实际施加到制动器的气压。
-[Page] 参考手册页码：145
-
-#R6-6 When a tractor is being driven without the trailer attached, a bobtail proportioning valve reduces axle braking by as much as:
-a) 75%
-b) 50%
-c) 25%
-d) 60 psi
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Bobtail proportioning valve在无挂车时减少后轴制动力，最高可达75%。
-[Page] 参考手册页码：164
-
-#R6-7 The most common cause of loss of effective braking on air equipped vehicles is:
-a) brakes out of adjustment
-b) overheated brake drums
-c) loss of air pressure
-d) bottoming out
-[Correct Answer] 正确答案： a)
-[Explain] 解释：最常见制动失效原因是刹车未调整（out of adjustment），导致行程过大。
-[Page] 参考手册页码：153
-
-#R6-8 What is the purpose of the red marking on some brake chambers?
-a) manufacturers trademark
-b) strength of the pushrod
-c) shows brake is badly out of adjustment and needs immediate attention
-d) to warn driver when the brake linings are low
-[Correct Answer] 正确答案： c)
-[Explain] 解释：红色标记表示推杆行程过长，制动严重失调，需要立即调整。
-[Page] 参考手册页码：200
-
-#R6-9 What would the consequence of a brake chamber “bottoming out” be?
-a) the brake chamber hits the truck frame
-b) the foot valve hits the floor
-c) no consequences
-d) braking power would be greatly reduced
-[Correct Answer] 正确答案： d)
-[Explain] 解释：Bottoming out指气室行程用尽但仍未产生足够制动力，导致制动力显著下降。
-[Page] 参考手册页码：200
-
-#R6-10 What method of checking brakes do roadside inspectors use?
-a) service method
-b) free stroke method
-c) fanning the brakes
-d) applied stroke method
-[Correct Answer] 正确答案： d)
-[Explain] 解释：路检使用applied stroke method，即在施加制动时测量推杆行程。
-[Page] 参考手册页码：170
-
-#R6-11 To test the holding power of spring brakes, a driver should:
-a) apply the spring brakes while the vehicle is moving
-b) allow the spring brakes to hold a vehicle on a grade
-c) roll forward slightly then apply the treadle valve
-d) complete a tug test, in low gear, with the spring brakes applied
-[Correct Answer] 正确答案： d)
-[Explain] 解释：测试弹簧刹车需进行tug test，低档轻拉确认车辆不会移动。
-[Page] 参考手册页码：172
-
-#R6-12 How can long stroke brake chambers be identified?
-a) bigger diaphragm size
-b) the brakes that are on the front axle
-c) square-shaped inlet ports and/or trapezoid-shaped name tag on the clamp bolt
-d) by measuring the brake chamber pushrod travel
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Long stroke chamber通过方形接口或梯形标签识别。
-[Page] 参考手册页码：200
-
-#R6-13 How is heat dissipated in a drum brake system?
-a) dissipated by the speed of the vehicle
-b) absorbed by the brake drums and dissipated into the atmosphere
-c) dissipated by the air temperature
-d) the heat is turned into traction
-[Correct Answer] 正确答案： b)
-[Explain] 解释：鼓式制动中，热量由制动鼓吸收并散发到空气中。
-[Page] 参考手册页码：159
-
-#R6-14 What is the main cause of brake fade at high temperatures?
-a) air pressure becomes hot
-b) the brake linings expand away from the drum
-c) the brake drums expand away from the linings
-d) low air pressure
-[Correct Answer] 正确答案： c)
-[Explain] 解释：高温下鼓膨胀，导致与摩擦片间隙变大，制动力下降（brake fade）。
-[Page] 参考手册页码：160
-
-#R6-15 What is meant by the term “brake lag”?
-a) a wheel chock to keep the vehicle from moving
-b) a phrase used to wish an actor good luck
-c) the 4/10ths of a second it takes air to apply the brakes after the treadle is pressed
-d) the amount the pushrod extends when checked daily
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Brake lag约为0.4秒，是空气从阀门传递到制动器所需时间。
-[Page] 参考手册页码：142
-
-#R6-16 To stop a vehicle, the energy of motion is turned into:
-a) heat in a brake lining and drum
-b) moisture in the reservoirs
-c) traction
-d) air pressure
-[Correct Answer] 正确答案： a)
-[Explain] 解释：根据DCV，车辆动能在制动时通过摩擦转化为热能，主要集中在制动蹄片与制动鼓之间。
-[Page] 参考手册页码：147
-
-#R6-17 What is fine for brakes being out of adjustment?
-a) up to $1000
-b) up to $2000
-c) 70 push-ups
-d) $70 per brake out of adjustment
-[Correct Answer] 正确答案： b)
-[Explain] 解释：DCV提到制动系统违规（如未调整）会受到高额罚款，最高可达约$2000。
-[Page] 参考手册页码：168
-
-#R6-18 What is the maximum pressure available for a brake application?
-a) 125 psi
-b) 150 psi 
-c) application pressure
-d) reservoir pressure
-[Correct Answer] 正确答案： d)
-[Explain] 解释：制动应用最大压力取决于储气罐压力（reservoir pressure），因为系统所有气压来源于储气罐。
-[Page] 参考手册页码：136
-
-#R6-19 If the weight of a vehicle is doubled, how much more power is required to be able to stop in the same distance?
-a) two times the power
-b) four times the power
-c) eight times the power
-d) six times the power
-[Correct Answer] 正确答案： a)
-[Explain] 解释：DCV指出，车辆重量翻倍，所需制动力也需翻倍才能在相同距离内停车。
-[Page] 参考手册页码：159
-
-#R6-20 If the speed of a vehicle is doubled, how much more stopping power is required to stop in the same distance?
-a) two times the stopping power
-b) four times the stopping power
-c) six times the stopping power
-d) eight times the stopping power
-[Correct Answer] 正确答案： b)
-[Explain] 解释：速度翻倍，动能增加为平方关系，因此需要四倍制动力。
-[Page] 参考手册页码：159
-
-#R6-21 What is the final factor that will determine if a vehicle will stop?
-a) the amount of power
-b) the amount of friction
-c) the amount of pushrod travel
-d) the amount of traction
-[Correct Answer] 正确答案： d)
-[Explain] 解释：最终决定车辆是否能停止的是轮胎与路面之间的附着力（traction）。
-[Page] 参考手册页码：160
-
-#R6-22 A quick release valve can be used with spring brakes for:
-a) faster release
-b) faster application
-c) stronger holding power
-d) a secondary braking system 
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Quick release valve可帮助加快气压释放，使制动器更快动作或恢复。
-[Page] 参考手册页码：142
-
-#R6-23 How can brake component damage, caused by compounding, be avoided?
-a) compounding cannot be avoided
-b) by adjusting the pushrod travel
-c) by applying the spring brakes before making a heavy service brake application
-d) by releasing the spring brakes before making a heavy service brake application
-[Correct Answer] 正确答案： d)
-[Explain] 解释：避免compounding需在重踩脚刹前释放弹簧刹车，否则两种力叠加损坏部件。
-[Page] 参考手册页码：150
-
-#R6-24 How are most compressors lubricated today?
-a) by condensation
-b) from the engine lubricating system
-c) by an oil supply in the compressor crankcase
-d) no lubrication is required
-[Correct Answer] 正确答案： b)
-[Explain] 解释：现代压缩机通常由发动机润滑系统供油。
-[Page] 参考手册页码：136
-
-#R6-25 Safety actuator parking brakes are:
-a) brakes that use two diaphragms for air; one for parking an done for service
-b) air actuated parking brakes used in some buses
-c) parking brake that does not use spring force for parking
-d) all of the above
-[Correct Answer] 正确答案： d)
-[Explain] 解释：Safety actuator类型包含多种设计形式，因此选项综合正确。
-[Page] 参考手册页码：149
-
-#R6-26 What is the advantage of a dual air system?
-a) extra braking force
-b) no difference in operation
-c) takes heat off of drums
-d) prevents total brake failure
-[Correct Answer] 正确答案： d)
-[Explain] 解释：双回路系统的优势在于一套失效时另一套仍可工作，避免完全失效。
-[Page] 参考手册页码：157
-
-#R6-27 If a small leak develops in a brake chamber, what valve will deliver the same application pressure as the rest of the chambers?
-a) quick release valve
-b) foot valve
-c) flux capacitor valve
-d) relay valve
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Foot valve负责将相同控制压力分配到各制动器。
-[Page] 参考手册页码：141
-
-#R6-28 When checking the free stroke (pry method) what is the maximum acceptable pushrod stroke?
-a) 3/4 of an inch
-b) 1 3/4 inches
-c) 2 inches
-d) 2 1/2 inches
-[Correct Answer] 正确答案： a)
-[Explain] 解释：DCV规定使用撬杆检查自由行程时最大约为3/4英寸。
-[Page] 参考手册页码：154
-
-#R6-29 An automatic front wheel limiting valve is overridden completely when application pressure exceeds:
-a) 40 psi
-b) 50 %
-c) 90 psi
-d) 60 psi
-[Correct Answer] 正确答案： d)
-[Explain] 解释：前轮限压阀在超过约60 psi时被完全旁通。
-[Page] 参考手册页码：143
-
-#R6-30 When should a driver use the manual front wheel limiting valve?
-a) when necessary on slippery roads, to reduce front wheel application by 50%
-b) when necessary on slippery roads, to reduce front wheel application by 25%
-c) when necessary on slippery roads, to cut out front wheel braking
-d) when abs system has failed
-[Correct Answer] 正确答案： a)
-[Explain] 解释：手动前轮限压阀用于湿滑路面，将前轮制动力减少约50%。
-[Page] 参考手册页码：143
-
-#R6-31 Between what two pressures must the governor unload the compressor?
-a) 50 and 90 psi
-b) 105 and 135 psi
-c) 125 and 150 psi
-d) 1000 – 1200 rpm
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Governor在约105–135 psi之间使压缩机卸载（cut-out），停止压缩空气。
-[Page] 参考手册页码：136
-
-#R6-32 By what pressure must the governor reload the compressor?
-a) 70 psi
-b) 90 psi
-c) no lower than 105 psi
-d) no lower than 80 psi
-[Correct Answer] 正确答案： d)
-[Explain] 解释：Governor在气压降至约80 psi时重新加载压缩机（cut-in）。
-[Page] 参考手册页码：136
-
-#R6-33 If one set of brakes are poorly adjusted, what effect could it have on the remaining sets of brakes the system?
-a) brakes would automatically equalize
-b) brakes would increase their share of braking, possibly causing overheating
-c) there would be no noticeable effect
-d) the remaining brakes will not operate
-[Correct Answer] 正确答案： b)
-[Explain] 解释：某一制动未调整会导致其他制动承担更多负荷，从而过热。
-[Page] 参考手册页码：153
-
-#R6-34 If manual slack adjuster travel is checked during a brake application, travel should not exceed:
-a) 3/4 of an inch
-b) 2 1/2 inches
-c) 1 3/4 inches
-d) 2 inches
-[Correct Answer] 正确答案： c)
-[Explain] 解释：在施加制动时检查推杆行程，最大约1¾英寸（Type 30气室）。
-[Page] 参考手册页码：200
-
-#R6-35 When adjusting a manual slack adjuster, which way should the adjusting nut be turned to tighten the brakes?
-a) clockwise
-b) in the same direction as the S-cam shaft
-c) to make the S-cam rotate in the same direction as a brake application
-d) manual slack adjusters should not require adjustment
-[Correct Answer] 正确答案： c)
-[Explain] 解释：调整应使S-cam旋转方向与制动时一致，以缩小间隙。
-[Page] 参考手册页码：153
-
-#R6-36 What is the purpose of the relay valve?
-a) reduces application pressure to the front brake chambers
-b) relays reservoir air directly to the treadle valve
-c) provides quicker application pressure to the brake chambers, reducing lag time
-d) provides controlled rear braking if the primary system fails
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Relay valve使储气罐空气直接进入气室，减少气压传输延迟（lag）。
-[Page] 参考手册页码：142
-
-#R6-37 How often should reservoirs be drained?
-a) daily, or more often under extreme conditions
-b) weekly, or more often under extreme conditions
-c) monthly, or more often under extreme conditions
-d) only when moisture is in the reservoirs
-[Correct Answer] 正确答案： a)
-[Explain] 解释：储气罐应每日排水，防止水分和油污染系统。
-[Page] 参考手册页码：139
-
-#R6-38 Signs posted in advance of a downgrade instructing drivers to stop and inspect vehicle brakes are:
-a) regulatory signs
-b) warning signs
-c) advisory signs
-d) directional signs
-[Correct Answer] 正确答案： a)
-[Explain] 解释：要求停车检查刹车的标志属于法规标志（regulatory signs）。
-[Page] 参考手册页码：168
-
-#R6-39 What is the purpose of the spring brake modulator valve?
-a) adjusts brakes automatically
-b) increases parking in slippery weather
-c) to monitor the brakes on the drive axles
-d) provides controlled rear braking if the primary system fails
-[Correct Answer] 正确答案： d)
-[Explain] 解释：Spring brake modulator valve在主系统失效时提供受控后轮制动。
-[Page] 参考手册页码：158
-
-#R6-40 The spring parking brake emergency release system will allow the driver to:
-a) move a disabled vehicle to safety
-b) operate in California
-c) release the service brakes
-d) cage the brakes
-[Correct Answer] 正确答案： a)
-[Explain] 解释：紧急释放系统允许在无气压情况下短距离移动故障车辆。
-[Page] 参考手册页码：151
-
-#R6-41 How can spring brakes be released without the use of air pressure?
-a) by caging them
-b) by compounding the brakes
-c) they cannot
-d) by removing the springs
-[Correct Answer] 正确答案： a)
-[Explain] 解释：通过caging（机械压缩弹簧）可在无气压时释放弹簧刹车。
-[Page] 参考手册页码：151
-
-#R6-42 If the service brakes are out of adjustment, the spring brakes will be:
-a) unaffected
-b) less powerful for parking
-c) more powerful for parking
-d) impossible to release
-[Correct Answer] 正确答案： b)
-[Explain] 解释：若行车制动未调整，弹簧刹车行程增加，驻车制动力下降。
-[Page] 参考手册页码：150
-
-#R6-43 If there are no dead end couplers, how can a driver store glad hands to prevent dirt and debris from entering air lines?
-a) by removing the glad hands and storing them in the vehicle
-b) by coupling the glad hands together
-c) the vehicle could not be driven without dead end couplers
-d) the vehicle could be driven, but only with a trailer connected
-[Correct Answer] 正确答案： b)
-[Explain] 解释：将glad hands互相连接可防止杂质进入气路。
-[Page] 参考手册页码：163
-
-#R6-44 The valve that prevents failure of air accessories from totally depleting the system is the:
-a) one-way check valve
-b) pressure protection valve
-c) safety valve
-d) relay valve
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Pressure protection valve优先保证制动系统气压，防止附件耗尽空气。
-[Page] 参考手册页码：138
-
-#R6-45 What causes moisture to form in the air brakes system?
-a) engine coolant leaking into the system
-b) air warms up in the tank, creating condensation
-c) alcohol injectors and evaporators
-d) compressed air becomes hot, then cools, creating condensation
-[Correct Answer] 正确答案： d)
-[Explain] 解释：压缩空气在压缩后升温，进入系统后冷却形成冷凝水（moisture）。
-[Page] 参考手册页码：139
-
-#R6-46 What is the final factor that will determine if a vehicle will move?
-a) traction
-b) friction
-c) heat
-d) motion
-[Correct Answer] 正确答案： a)
-[Explain] 解释：车辆是否能移动或停止最终取决于轮胎与路面的附着力（traction）。
-[Page] 参考手册页码：160
-
-#R6-47 How are service brakes tested to ensure they are working properly?
-a) drive slowly in traffic and apply them
-b) roll forward slightly and apply them
-c) pump the brake pedal and read the gauge
-d) by doing a tug test
-[Correct Answer] 正确答案： b)
-[Explain] 解释：测试行车制动应缓慢前移后踩刹车，确认制动力是否正常。
-[Page] 参考手册页码：172
-
-#R6-48 On a long and steep downgrade, the best method of descending is:
-a) hard brake, then cool off, then hard brake again
-b) steady brake application of 10 psi or less
-c) use correct gear and engine retarder, do not use the brakes
-d) using the cruise control to help control the speed
-[Correct Answer] 正确答案： c)
-[Explain] 解释：长下坡应使用低档位和发动机制动，减少对脚刹依赖，防止过热。
-[Page] 参考手册页码：160
-
-#R6-49 The speed at which a heavy vehicle should travel on a downgrade is best determined by the:
-a) condition of the road
-b) length and percentage of the grade
-c) necessity to be able to make an emergency stop
-d) the condition of the brakes
-[Correct Answer] 正确答案： c)
-[Explain] 解释：安全车速取决于是否能在紧急情况下停车，而非路况或坡度本身。
-[Page] 参考手册页码：160
-
-#R6-50 Compressors must build air in reservoirs, with the engine speed set between 1000 and 1200 rpm, from 50 to 90 psi, within:
-a) 30 seconds
-b) 3 minutes
-c) 5 minutes
-d) 3 psi
-[Correct Answer] 正确答案： b)
-[Explain] 解释：压缩机建压标准为1000–1200 rpm时，50到90 psi在3分钟内完成。
-[Page] 参考手册页码：171
-
-#R6-51 What are foundation brakes?
-a) the mechanical parts that make up the brake assembly at each wheel
-b) brakes on trailers only
-c) brakes used on tour buses
-d) air-over-hydraulic braking systems
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Foundation brakes指每个车轮上的机械制动组件，如鼓、蹄片等。
-[Page] 参考手册页码：153
-
-#R6-52 In a dual air system, the primary system supplies air to what?
-a) front brakes
-b) rear brakes
-c) manual limiter
-d) wet tank
-[Correct Answer] 正确答案： b)
-[Explain] 解释：双回路系统中Primary system通常控制后轮制动。
-[Page] 参考手册页码：157
-
-#R6-53 In a dual air system, what valve is used to protect the primary system from an air loss in the secondary system?
-a) one-way check valve
-b) two-way check valve
-c) relay valve
-d) spring brake modulator valve
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Two-way check valve防止一个系统失压影响另一个系统。
-[Page] 参考手册页码：158
-
-#R6-54 What are the brake chambers in an air-over-hydraulic system?
-a) pressure intensifiers
-b) modulators
-c) two-way check valves
-d) pressure protection valves
-[Correct Answer] 正确答案： a)
-[Explain] 解释：空气-液压系统中的气室为压力放大器（pressure intensifiers）。
-[Page] 参考手册页码：155
-
-#R6-55 What is used to regulate the pressure going into the air system?
-a) governor
-b) reservoir gauge
-c) compressor
-d) air dryer
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Governor用于控制系统压力的上限和下限。
-[Page] 参考手册页码：136
-
-#R6-56 What must the driver do if the low air warning activates while the vehicle is in service?
-a) pull over at the next rest stop
-b) call dispatch and ask for help
-c) the driver is not required to stop if driving a dual air system
-d) apply hazards and pull over immediately to check
-[Correct Answer] 正确答案： d)
-[Explain] 解释：低气压报警意味着系统不安全，必须立即安全停车检查。
-[Page] 参考手册页码：147
-
-#R6-57 When must a driver inspect the vehicle?
-a) every 24 hours
-b) before the first drive of the day, and after the last run of the day
-c) when the brakes are out of adjustment
-d) when directed by a supervisor
-[Correct Answer] 正确答案： b)
-[Explain] 解释：法规要求每日首次驾驶前和结束后检查车辆。
-[Page] 参考手册页码：168
-
-#R6-58 The valve that allows the reservoirs to be emptied of air and moisture is the:
-a) drain valve
-b) spring brake relay valve
-c) two-way check valve
-d) pressure protection valve
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Drain valve用于排放储气罐中的空气和水分。
-[Page] 参考手册页码：139
-
-#R6-59 The gauge that reads the pressure in the service tanks is called the:
-a) application gauge
-b) service gauge
-c) reservoir gauge
-d) tire gauge
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Reservoir gauge用于显示储气罐内气压。
-[Page] 参考手册页码：145
-
-#R6-60 Should the governor fail, what prevents the system from over-pressurizing?
-a) pressure protection valve
-b) quick release valve
-c) wet tank
-d) safety valve
-[Correct Answer] 正确答案： d)
-[Explain] 解释：当governor失效时，safety valve在约150 psi时释放压力防止爆炸。
-[Page] 参考手册页码：138
-
-#R6-61 What removes water vapour, oil mist and carbon particles from the air, before delivering it to the tanks?
-a) one-way check valve
-b) air dryer
-c) wet tank
-d) alcohol evaporator
-[Correct Answer] 正确答案： b)
-[Explain] 解释：Air dryer用于去除压缩空气中的水蒸气、油雾和杂质，防止系统污染。
-[Page] 参考手册页码：139
-
-#R6-62 The air line that supplies air to the trailer, at full tractor reservoir pressure is called the:
-a) control line
-b) primary line
-c) supply line
-d) service line
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Supply line（紧急线）将储气罐的气压输送至挂车。
-[Page] 参考手册页码：162
-
-#R6-63 What devices introduce a small amount of alcohol vapour into the air system?
-a) air dryers
-b) front wheel limiting systems
-c) injectors and evaporators
-d) ADIS
-[Correct Answer] 正确答案： c)
-[Explain] 解释：酒精注入装置通过injectors和evaporators引入蒸气，防止结冰。
-[Page] 参考手册页码：140
-
-#R6-64 Driving a tractor without a trailer attached is called:
-a) brake lag
-b) free stroke
-c) bobtailing
-d) tailgating
-[Correct Answer] 正确答案： c)
-[Explain] 解释：无挂车行驶称为bobtailing，会改变制动力分配。
-[Page] 参考手册页码：164
-
-#R6-65 Another name for the spring parking brake emergency release system is:
-a) pop-off valve
-b) california spring parking brake system
-c) safety actuator brake
-d) anti-lock braking systems
-[Correct Answer] 正确答案： b)
-[Explain] 解释：该系统也称为California system，用于无气压释放弹簧刹车。
-[Page] 参考手册页码：151
-
-#R6-66 This item squeezes air into a smaller space. This increases the force the air exerts.
-a) relay valve
-b) reservoir
-c) compressor
-d) main discharge line
-[Correct Answer] 正确答案： c)
-[Explain] 解释：压缩机通过压缩空气提高压力，从而增加空气施加的力。
-[Page] 参考手册页码：136
-
-#R6-67 The valve that prevents total loss of air if the compressor discharge line breaks is called the:
-a) two-way check valve
-b) one-way check valve
-c) glad hand
-d) relay valve
-[Correct Answer] 正确答案： b)
-[Explain] 解释：One-way check valve防止气压从系统回流，避免完全失压。
-[Page] 参考手册页码：138
-
-#R6-68 The valve that allows for rapid exhaust at the brake chamber is the:
-a) quick release valve
-b) safety valve
-c) automatic limiter
-d) ADIS
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Quick release valve允许空气在气室附近快速排出，减少释放延迟。
-[Page] 参考手册页码：142
-
-#R6-69 What is used to store air for use in brake applications?
-a) relay valve
-b) pressure intensifier
-c) reservoirs
-d) spring brake emergency release system
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Reservoirs用于储存压缩空气供制动使用。
-[Page] 参考手册页码：138
-
-#R6-70 The parking brake control valve is usually what color? 
-a) red
-b) blue
-c) yellow
-d) green
-[Correct Answer] 正确答案： c)
-[Explain] 解释：停车制动控制阀通常为黄色按钮（黄钮）。
-[Page] 参考手册页码：148
-
-#R6-71 The best way to avoid compounding is:
-a) apply the parking brakes before making a heavy service brake application
-b) apply the foot valve before releasing the spring brakes
-c) release the spring brakes before making a heavy service brake application
-d) pump the brakes fives times, than apply the foot valve
-[Correct Answer] 正确答案： c)
-[Explain] 解释：避免compounding需先释放弹簧刹车再进行重踩脚刹。
-[Page] 参考手册页码：150
-
-#R6-72 Why are drivers required to do a pre-trip inspection?
-a) safety
-b) it is the law
-c) to avoid brake fade
-d) to avoid a fine
-[Correct Answer] 正确答案： b)
-[Explain] 解释：法律要求驾驶员进行行前检查，确保车辆安全。
-[Page] 参考手册页码：168
-
-#R6-73 The six main components of a basic air brake system are:
-a) foot valve, reservoir gauge, compressor, governor, reservoir, foundation brakes
-b) compressor, governor, foot valve, relay valve, reservoir, foundation brakes
-c) foot valve, compressor, governor, reservoir, foundation brakes, treadle valve
-d) compressor, governor, reservoir, air lines, foundation brakes, foot valve
-[Correct Answer] 正确答案： d)
-[Explain] 解释：基本气刹系统包括压缩机、调压阀、储气罐、管路、制动器和脚阀。
-[Page] 参考手册页码：136
-
-#R6-74 When checking belt tension on a belt-driven air compressor, you would:
-a) lubricate the belt
-b) check for grease on the tapers
-c) press on the belt mid-way between the pulleys 
-d) have a mechanic check belt tension
-[Correct Answer] 正确答案： c)
-[Explain] 解释：检查皮带张力应在两滑轮中间按压，确认松紧适当。
-[Page] 参考手册页码：136
-
-#R6-75 Besides psi, air can also be measured in:
-a) kpa
-b) lbs
-c) kgs
-d) ksi
-[Correct Answer] 正确答案： a)
-[Explain] 解释：气压除psi外也可用kPa表示，是国际单位。
-[Page] 参考手册页码：135
-
-#R6-76 If 100 psi is exerted against a diaphragm of 30 square inches, the total pushrod force would be:
-a) 300 lbs
-b) 3000 lbs
-c) 1200 lbs
-d) 3000 psi
-[Correct Answer] 正确答案： b)
-[Explain] 解释：力=压力×面积，100 psi × 30 in² = 3000 lbs。
-[Page] 参考手册页码：147
-
-#R6-77 If reservoirs are equipped with automatic drain valves, reservoirs:
-a) don’t need to be drained manually
-b) only need to be drained if there’s moisture in the system
-c) will take care of themselves
-d) should still be drained regularly to check for moisture
-[Correct Answer] 正确答案： d)
-[Explain] 解释：即使有自动排水阀，也需定期手动排水以检查水分。
-[Page] 参考手册页码：139
-
-#R6-78 Some older vehicles have a warning device that drops into the driver’s view when air pressure drops below 60 psi. This is called:
-a) one-way check valve
-b) two-way check valve
-c) safety valve
-d) wig-wag
-[Correct Answer] 正确答案： d)
-[Explain] 解释：wig-wag是低压警告装置，当气压低于约60 psi时触发。
-[Page] 参考手册页码：146
-
-#R6-79 The slack adjuster, besides adjusting for brake wear, acts as a lever. Leverage is a form of:
-a) force multiplication
-b) air pressure
-c) motion
-d) heat
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Slack adjuster作为杠杆，将气室推力放大，是力的倍增装置。
-[Page] 参考手册页码：153
-
-#R6-80 If stopping distance is calculated as the distance it takes to stop after recognizing a hazard, what is braking distance?
-a) the distance it takes for the brakes to apply
-b) the distance the vehicle travels, after the brakes apply, until the vehicle stops
-c) the distance between your vehicle and the vehicle ahead of you
-d) the distance from the foot valve to the foundation brakes
-[Correct Answer] 正确答案： b)
-[Explain] 解释：制动距离是从刹车施加后到完全停止的距离。
-[Page] 参考手册页码：159
-
-#R6-81 What is the advantage of using air brakes, rather than hydraulic brakes?
-a) they use a much greater force to apply the brakes
-b) they are more tolerant to small leaks
-c) they are capable of stopping heavy commercial vehicles safely
-d) all of the above
-[Correct Answer] 正确答案： d)
-[Explain] 解释：空气制动系统具有更大制动力、容忍泄漏能力强，适合重型车辆。
-[Page] 参考手册页码：135
-
-#R6-82 If a driver must adjust an automatic slack adjuster, with a square adjusting bolt, which way would they turn the bolt to adjust it?
-a) clockwise
-b) counter-clockwise
-c) same direction as the s-cam
-d) depends on the type of brake
-[Correct Answer] 正确答案： b)
-[Explain] 解释：自动调节器如需调整通常逆时针旋转，但应由专业人员处理。
-[Page] 参考手册页码：153
-
-#R6-83 Why is it important to keep away from a spring parking brake chamber that shows any sign of damage?
-a) the spring is very powerful and could cause serious injury if it breaks
-b) the air may leak causing the springs brake to dynamite
-c) the brake fluid may leak causing eye and skin  irritation
-d) all of the above
-[Correct Answer] 正确答案： a)
-[Explain] 解释：弹簧刹车内高强度弹簧若损坏可能突然释放，极其危险。
-[Page] 参考手册页码：148
-
-#R6-84 In order to properly check pushrod with a pry bar, reservoir pressure must be no less than:
-a) 80 psi
-b) 60 psi
-c) 50-90 psi
-d) 100 psi
-[Correct Answer] 正确答案： d)
-[Explain] 解释：进行撬杆检查时，系统气压应达到约100 psi确保准确。
-[Page] 参考手册页码：154
-
-#R6-85 Air from a two-way check valve is frequently called:
-a) condensation
-b) blended air
-c) primary air
-d) secondary air
-[Correct Answer] 正确答案： b)
-[Explain] 解释：two-way check valve输出的空气称为blended air。
-[Page] 参考手册页码：158
-
-#R6-86 What is the correct way to adjust an air disc brake?
-a) using a 9/16ths wrench and turning in a clockwise direction
-b) using a 9/16ths wrench and turning in a counter-clockwise direction
-c) air disc brakes should only be adjusted or repaired by a qualified mechanic
-d) pressing and releasing the foot valve six times on level ground
-[Correct Answer] 正确答案： c)
-[Explain] 解释：空气盘式制动器应由专业技师调整或维修。
-[Page] 参考手册页码：156
-
-#R6-87 What are wedge brakes?
-a) wheel chocks (or blocks) wedged at the drive axle to keep the vehicle from moving
-b) air actuated brakes used in some buses
-c) brakes with wedge shaped pushrods found on the front axles of some trucks
-d) brakes that use rotors and pads to stop the vehicle
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Wedge brakes使用楔形推杆结构，常见于某些前轴系统。
-[Page] 参考手册页码：156
-
-#R6-88 You must have an air brake endorsement to operate a vehicle equipped with air-over-hydraulic brakes unless:
-a) the vehicle is being used to tow a construction vehicle
-b) the system uses an air treadle
-c) the vehicle is under 5500 kgs
-d) the system does not use an air treadle
-[Correct Answer] 正确答案： d)
-[Explain] 解释：无air treadle系统不需要air brake endorsement。
-[Page] 参考手册页码：134
-
-#R6-89 The proper technique, when using ABS, is to:
-a) use the proper gear and engine retarder and don’t use the brakes
-b) pump the brake pedal
-c) use threshold braking
-d) apply a firm application on the brake pedal and allow the ABS to operate
-[Correct Answer] 正确答案： d)
-[Explain] 解释：ABS使用时应持续踩刹车，让系统自动调节防止锁死。
-[Page] 参考手册页码：167
-
-#R6-90 How much pressure should you apply to the foot valve when measuring slack adjustment using the applied stroke method?
-a) 40 psi
-b) 90 to 100 psi
-c) 150 psi
-d) 300 psi
-[Correct Answer] 正确答案： b)
-[Explain] 解释：测量施加行程时应施加约90–100 psi压力。
-[Page] 参考手册页码：170
-
-#R6-91 How long are the results valid of an air brakes knowledge test if the driver has not added it to their licence?
-a) 1 year
-b) 2 years
-c) 6 months
-d) forever
-[Correct Answer] 正确答案： a)
-[Explain] 解释：BC规定气刹知识考试成绩有效期为1年，必须在此期间加到驾照上。
-[Page] 参考手册页码：134
-
-#R6-92 To adjust an automatic slack adjuster that has a hexagonal adjusting bolt on the side of the body, which way would the driver turn it?
-a) clockwise
-b) counter-clockwise
-c) direction may change
-d) same direction as the camshaft
-[Correct Answer] 正确答案： a)
-[Explain] 解释：带侧面六角螺栓的自动调节器通常顺时针调整，但应由专业人员操作。
-[Page] 参考手册页码：153
-
-#R6-93 What is the most common air brake system defect found during a commercial vehicle inspection?
-a) slow air build-up rate
-b) brakes out of adjustment
-c) defective governor
-d) leaking compressor
-[Correct Answer] 正确答案： b)
-[Explain] 解释：最常见缺陷是刹车未调整（out of adjustment），影响制动力分配。
-[Page] 参考手册页码：153
-
-#R6-94 To stop a vehicle, the energy of motion is turned into the energy of:
-a) friction
-b) traction
-c) heat
-d) force
-[Correct Answer] 正确答案： c)
-[Explain] 解释：车辆动能通过摩擦转化为热能，是制动基本原理。
-[Page] 参考手册页码：147
-
-#R6-95 Brake failure may occur if drum temperatures exceed:
-a) 300 degrees celsius
-b) 250 degrees celsius
-c) 120 degrees celsius
-d) 90 degrees celsius
-[Correct Answer] 正确答案： a)
-[Explain] 解释：制动鼓温度过高（约300°C以上）会导致制动失效。
-[Page] 参考手册页码：160
-
-#R6-96 An average driver’s reaction time is:
-a) 4/10ths of a second
-b) 1/2 of a second
-c) 5 seconds
-d) 3/4 of a second
-[Correct Answer] 正确答案： d)
-[Explain] 解释：平均反应时间约为0.75秒（3/4秒）。
-[Page] 参考手册页码：159
-
-#R6-97 Why is it important to be cautious if using engine retarders on slippery road surfaces?
-a) road surface does not affect engine braking
-b) the extra heat in the braking system may cause ice to form on the road surface
-c) the engine retarders may freeze
-d) can cause the drive wheels to lock up resulting in a loss of control
-[Correct Answer] 正确答案： d)
-[Explain] 解释：发动机制动器在湿滑路面可能导致驱动轮锁死，失去控制。
-[Page] 参考手册页码：160
-
-#R6-98 Signs with dashed borders indicate:
-a) directional signs
-b) regulatory signs
-c) warning signs
-d) signs pertaining to commercial drivers
-[Correct Answer] 正确答案： d)
-[Explain] 解释：虚线边框标志表示与商用车辆相关的规定。
-[Page] 参考手册页码：168
-
-#R6-99 What affects stopping distance the most?
-a) weight
-b) speed
-c) grade
-d) brake adjustment
-[Correct Answer] 正确答案： b)
-[Explain] 解释：速度对动能影响最大（平方关系），因此对制动距离影响最大。
-[Page] 参考手册页码：159
-
-#R6-100 Following distance in a bus, truck or heavy vehicle should be no less than:
-a) 2 seconds
-b) 3 seconds
-c) 4 seconds
-d) 5 seconds
-[Correct Answer] 正确答案： d)
-[Explain] 解释：重型车辆建议最少保持5秒跟车距离以确保安全。
-[Page] 参考手册页码：166
-
-#R6-101 The proper way to drive through large pools of water on the roadway is:
-a) very slowly, using the clutch and throttle together
-b) very quickly so the water spreads
-c) by pumping the brakes as you drive through
-d) by placing a slight drag on the brake pedal as you drive through
-[Correct Answer] 正确答案： d)
-[Explain] 解释：涉水时轻踩刹车保持干燥，以防制动力下降。
-[Page] 参考手册页码：160
-
-#R6-102 Reaction time is defined as:
-a) the time it takes the driver to recognize a hazard
-b) the time it takes for the brakes to apply after the treadle is pressed
-c) the time it takes the driver to apply the brake after a hazard is recognized
-d) the time it takes for the vehicle to stop after a hazard is recognized
-[Correct Answer] 正确答案： c)
-[Explain] 解释：反应时间是识别危险后到踩下刹车之间的时间。
-[Page] 参考手册页码：159
-
-#R6-103 These provide an auxiliary slowing effect and assist the main brake system to slow the vehicle:
-a) relay valves
-b) traction control
-c) ABS
-d) retarders
-[Correct Answer] 正确答案： d)
-[Explain] 解释：Retarders提供辅助减速，减轻主制动系统负担。
-[Page] 参考手册页码：160
-
-#R6-104 The term r.p.m stands for:
-a) relay push momentum
-b) revolutions per minute
-c) radial pull maximum
-d) revolutions per median
-[Correct Answer] 正确答案： b)
-[Explain] 解释：RPM表示每分钟转数（revolutions per minute）。
-[Page] 参考手册页码：135
-
-#R6-105 Every carrier you work for must check your driving record:
-a) after you have been given the job
-b) once a year
-c) before hiring you and once a year after hiring you
-d) every three years
-[Correct Answer] 正确答案： c)
-[Explain] 解释：运输公司必须在雇佣前及之后每年检查驾驶记录。
-[Page] 参考手册页码：168
-
-#R6-106 What must you do if the low pressure warning indicator activates?
-a) stop immediately and call your supervisor for assistance
-b) continue on to the next stop and then investigate
-c) wait until the wig-wag retracts and then stop
-d) stop and find the cause of air loss
-[Correct Answer] 正确答案： d)
-[Explain] 解释：低压报警必须停车并查找原因，防止制动失效。
-[Page] 参考手册页码：147
-
-#R6-107 During an air brake pre-trip inspection on a vehicle with one trailer, air loss should be no more than:
-a) 1 psi within one minute
-b) 2 psi within one minute
-c) 3 psi within one minute
-d) 4 psi within one minute
-[Correct Answer] 正确答案： d)
-[Explain] 解释：单车带一拖车空气损失不应超过4 psi/分钟。
-[Page] 参考手册页码：171
-
-#R6-108 On an air brake equipped vehicle, brake adjustment can be checked from which location?
-a) From the cab
-b) visually, from the side of the vehicle
-c) when the driver is underneath the truck and trailer
-d) should always be checked from the rear of the vehicle
-[Correct Answer] 正确答案： c)
-[Explain] 解释：需在车下检查制动组件以确认调整情况。
-[Page] 参考手册页码：170
-
-#R6-109 Before removing the wheel chocks (or blocks), you should:
-a) release the spring brakes
-b) apply the spring brakes
-c) do a tug test
-d) all of the above
-[Correct Answer] 正确答案： b)
-[Explain] 解释：移除轮挡前必须先拉起弹簧刹车确保车辆固定。
-[Page] 参考手册页码：172
-
-#R6-110 Another name for a safety valve is a:
-a) relay valve
-b) foot valve
-c) pop-off valve
-d) tractor protection valve
-[Correct Answer] 正确答案： c)
-[Explain] 解释：Safety valve也称pop-off valve，在高压时释放气体。
-[Page] 参考手册页码：138
-
-#R6-111 Another name for the control line is the:
-a) service line
-b) emergency line
-c) supply line
-d) glad hands
-[Correct Answer] 正确答案： a)
-[Explain] 解释：Control line也称service line，用于控制制动信号传输。
-[Page] 参考手册页码：162
+d) The emergency relay valve
+[Correct Answer]: c)
+[Explain]: 在 dual circuit air system 中，air from both primary and secondary reservoirs 会进入 dual foot valve / foot valve arrangement（双回路脚阀结构），由驾驶员踩踏后分别控制对应回路的制动施加。因此题目问两路空气“被导向哪里”，答案是 foot valve。
+[Reference]: DCV – Dual Foot Valve / Dual Circuit Control
+
+#R15-01 If the weight of a vehicle is doubled, braking power needed to stop must be increased by:
+
+a) 2 times
+b) 4 times
+c) 6 times
+d) 8 times
+[Correct Answer]: a)
+[Explain]: 当 vehicle weight（车辆重量）增加时，为在相同 stopping distance（制动距离）内停车，所需 braking power（制动力）必须相应增加。此题仅考虑重量因素（不涉及速度变化），因此需要增加到 2 times（两倍）。
+[Reference]: DCV – Braking Principles
+
+#R15-02 To control speed on a downgrade, it is a good practice to?
+
+a) Pump the brakes rapidly
+b) Hard application allow time to cool
+c) Set the hand valve
+d) Select the correct gear with small even brake applications
+[Correct Answer]: d)
+[Explain]: 在 downgrade（下坡）时，应使用 correct gear selection（合适档位）配合 small even brake applications（小而均匀的制动），以避免 brake overheating（制动过热）和 brake fade（制动衰退）。
+[Reference]: DCV – Braking on Downgrades
+
+#R15-03 The maximum main reservoir pressure in an air brake system may vary between 105 & 125 PSI. The minimum pressure at which the compressor should cut back in is:
+
+a) 20 - 40 PSI
+b) 50 - 80 PSI
+c) 63 - 78 PSI
+d) 85 - 105 PSI
+[Correct Answer]: d)
+[Explain]: Governor（调压器）控制 compressor cut-in（恢复泵气）压力。该值必须足够高，以确保系统始终有 adequate air pressure（足够气压）支持 braking system。
+[Reference]: DCV – Governor / Air Pressure Control
+
+#R15-04 If the weight and speed are doubled, braking power needed to stop must be increased by:
+
+a) 2 times
+b) 4 times
+c) 6 times
+d) 8 times
+[Correct Answer]: d)
+[Explain]: braking requirement 与 speed² 和 weight 成正比，因此 weight ×2 且 speed ×2 → braking power 需要增加 8 倍。
+[Reference]: DCV – Braking Physics
+
+#R15-05 The quick release feature of a relay valve allows for:
+
+a) Faster application of service brakes.
+b) Faster release of service brakes.
+c) Steering in slippery conditions.
+d) Faster release of parking brake.
+[Correct Answer]: b)
+[Explain]: relay valve 的 quick release 功能可快速排气，从而使 service brakes 更快释放。
+[Reference]: DCV – Relay Valve
+
+#R15-06 The compressor must be capable of building up reservoir pressure from 50 PSI to 90 PSI at a fast engine idle in less than:
+
+a) 3 minutes
+b) 5 minutes
+c) 8 minutes
+d) 10 minutes
+[Correct Answer]: a)
+[Explain]: 该测试用于确认 compressor capacity（压缩机能力）是否符合标准。
+[Reference]: DCV – Air Supply System
+
+#R15-07 The foot valve is the valve that:
+
+a) Will automatically adjust to braking needs.
+b) Needs reservoir pressure to control it to within 10 PSI.
+c) If applied with a steady pressure will maintain balanced braking pressure.
+d) Answers a. and b.
+[Correct Answer]: c)
+[Explain]: foot valve（脚阀）控制 application pressure，并保持 balanced braking（平衡制动）。
+[Reference]: DCV – Foot Valve
+
+#R15-08 The most common cause of loss of braking effort on air brake equipped vehicle is:
+
+a) Brake out of adjustment
+b) Overheated brake drums
+c) Loss of air pressure
+d) Worn out brakes
+[Correct Answer]: a)
+[Explain]: brake out of adjustment（制动调整不当）会导致 push rod travel 过长，从而降低 braking force。
+[Reference]: DCV – Foundation Brakes
+
+#R15-09 When drums overheat, they:
+
+a) Improve braking because of the heat build-up due to friction.
+b) Expand away from the shoes thus reducing braking efficiency.
+c) Glow in the dark.
+d) Squeal.
+[Correct Answer]: b)
+[Explain]: brake drum 受热膨胀，导致接触减弱，从而降低 braking efficiency。
+[Reference]: DCV – Brake Fade
+
+#R15-10 What is a safety actuator parking brake?
+
+a) An automatic park brake
+b) A spring brake lock
+c) A one-way locking mechanism
+d) An air-operated parking brake
+[Correct Answer]: d)
+[Explain]: safety actuator parking brake 是 air-operated 结构，用空气控制释放。
+[Reference]: DCV – Spring Brakes
+
+
+#R15-11 Brake lag is defined as:
+
+a) The time it takes from the moment a hazard is recognized to the time the brake is applied.
+b) The time it takes the air to travel through the air brake system.
+c) The time it takes for the driver to decide what to do in an emergency.
+d) The time it takes to apply pressure to the treadle.
+[Correct Answer]: b)
+[Explain]: brake lag（制动滞后）指从 foot valve 被踩下，到 compressed air（压缩空气）通过 air lines 并 fully apply brakes（完全施加制动）之间的时间延迟。
+[Reference]: DCV – Brake Lag
+
+#R15-12 The maximum pressure available at any given time for a full brake application depends on:
+
+a) The size of the brake chamber.
+b) The distance between the brake valve and the chamber.
+c) The size of the diaphragms.
+d) The pressure in the reservoirs.
+[Correct Answer]: d)
+[Explain]: full brake application 的最大可用压力取决于 reservoir pressure（储气罐压力），因为所有制动气源来自该储备。
+[Reference]: DCV – Air Supply System
+
+#R15-13 Brake heat is dissipated in a drum brake system by:
+
+a) Holding a constant 10 PSI brake application.
+b) Brake drums to atmosphere.
+c) Coasting in neutral.
+d) Brake air conditioning.
+[Correct Answer]: b)
+[Explain]: brake heat（制动产生的热量）通过 brake drums 向 surrounding air（周围空气）散发。
+[Reference]: DCV – Heat Dissipation
+
+#R15-14 A bob-tail proportioning valve…
+
+a) Increases brake pressure to the drive axles when not attached to a trailer
+b) Moves a disabled vehicle to a stop
+c) Prevents drive axles skid when not attached to a trailer
+d) Allows the driver to use the hand valve without a trailer
+[Correct Answer]: c)
+[Explain]: bob-tail（无挂车状态）时，该 valve 减少 drive axle braking force，防止 skid（打滑）。
+[Reference]: DCV – Brake Balance
+
+#R15-15 In which direction should the adjusting nut be turned to tighten the brakes?
+
+a) Clockwise
+b) Counter clockwise
+c) “S” cam shaft rotates in the same direction as brake application
+d) “S” cam shaft rotates in the opposite direction as a brake application
+[Correct Answer]: c)
+[Explain]: 判断方向的关键是 cam rotation（凸轮旋转方向）与 brake application 一致。
+[Reference]: DCV – Slack Adjuster
+
+#R15-16 If excessive movement develops in the slack adjuster:
+
+a) The driver must pump the treadle to increase the braking effort.
+b) The warning buzzer will sound when the brakes are applied.
+c) The diaphragms could bottom in the chamber, resulting in brake failure.
+d) The brakes will lock.
+[Correct Answer]: c)
+[Explain]: push rod travel 过大可能导致 diaphragm bottoming out（触底），从而失去制动力。
+[Reference]: DCV – Foundation Brakes
+
+#R15-17 Where would an air dryer be installed in a standard air brake system?
+
+a) Between the compressor and the wet tank.
+b) Between the primary and the secondary tank.
+c) Between the tanks and the air brakes.
+d) Between the primary tank and the wet tank.
+[Correct Answer]: a)
+[Explain]: air dryer 安装在 compressor 之后，用于去除 moisture（湿气）。
+[Reference]: DCV – Air Dryer
+
+#R15-18 What is the purpose of a spring brake modulator valve?
+
+a) To adjust brakes automatically
+b) To increase braking in slippery weather
+c) To provide rear braking if primary system fails
+d) To signal parking brake failure
+[Correct Answer]: c)
+[Explain]: modulator valve 在 system failure 时调节 spring brake 以提供 controlled braking。
+[Reference]: DCV – Spring Brake System
+
+#R15-19 Before making the full brake application test on a vehicle equipped with spring brakes, why should the driver release the spring brakes?
+
+a) To obtain a true gauge reading.
+b) To permit the brakes to apply fully.
+c) To prevent damage to the slack adjusters by compounding the pressure.
+d) To prevent the brakes from applying fully.
+[Correct Answer]: c)
+[Explain]: 防止 compounding（复合制动）造成 excessive force 损坏组件。
+[Reference]: DCV – Compounding
+
+#R15-20 If, after you have started your trip, the brakes do not seem to be holding and the reservoir pressure is satisfactory, you should:
+
+a) Travel at reduced speeds.
+b) Stop, check brakes, and adjust if necessary.
+c) Report the condition at the end of the trip.
+d) Apply spring brakes.
+[Correct Answer]: b)
+[Explain]: 即使 pressure 正常，brake failure 仍需立即检查。
+[Reference]: DCV – Safety
+
+#R15-21 What does the term “bottoming out” refer to in an air brake system?
+
+a) The brake chamber hits the truck frame when applied
+b) The foot valve hits the floor when applied
+c) The reservoirs total depletion
+d) The push rod travels to the base of the brake chamber
+[Correct Answer]: d)
+[Explain]: push rod 行程过长触底，失去制动能力。
+[Reference]: DCV – Brake Chamber
+
+#R15-22 Spring type parking brakes are held in the released position by:
+
+a) Spring pressure.
+b) Air pressure.
+c) Application pressure.
+d) Treadle pressure.
+[Correct Answer]: b)
+[Explain]: spring brakes 通过 air pressure 保持释放状态。
+[Reference]: DCV – Spring Brakes
+
+#R15-23 What is the legal minimum to maximum main reservoir pressure for air brake equipped vehicles?
+
+a) 50 psi to 90 psi
+b) 80 psi to 85 psi
+c) 105 psi to 135 psi
+d) 105 psi to 150 psi
+[Correct Answer]: c)
+[Explain]: 法规规定的正常 operating pressure range。
+[Reference]: DCV – Pressure Limits
+
+#R15-24 What is a Type 30 long-stroke brake chamber design?
+
+a) A brake chamber used on front brakes
+b) Brake chambers designed for 53ft trailers
+c) Allows Type 30 brakes to stroke to 3 inches
+d) Designed for “A” and “B” trains only
+[Correct Answer]: c)
+[Explain]: long-stroke design 增加 allowable stroke。
+[Reference]: DCV – Brake Chamber Types
+
+#R15-25 The low-pressure warning device must operate when the main reservoir pressure drops to approximately:
+
+a) 20 to 40 PSI
+b) 60 to 65 PSI
+c) 80 to 85 PSI
+d) 105 to 125 PSI
+[Correct Answer]: b)
+[Explain]: warning device 在约60 psi触发。
+[Reference]: DCV – Warning Devices
+
+#R15-26 What must a driver do when a low-pressure warning buzzer sounds?
+
+a) Slow down and rev the engine
+b) Stop the vehicle and determine the cause of the air loss
+c) Stop if the main air gauge reaches 20 psi to 45 psi
+d) Apply the spring brakes immediately
+[Correct Answer]: b)
+[Explain]: 必须立即查明 air loss 原因。
+[Reference]: DCV – Safety
+
+#R15-27 When low-pressure warning buzzer sounds, the driver must:
+
+a) Stop the vehicle clear of traffic and determine the cause of the air loss.
+b) Bring the vehicle to a stop if main reservoir gauge indicates the pressure has dropped below 40 PSI.
+c) Apply the spring brakes immediately.
+d) Continue driving to the nearest maintenance shop.
+[Correct Answer]: a)
+[Explain]: 停车并确保安全环境。
+[Reference]: DCV – Safety
+
+#R15-28 If the brakes are poorly adjusted, the parking brake will be:
+
+a) More effective than the service brake.
+b) More difficult to apply.
+c) The same effectiveness as the service brake.
+d) Less effective than the service brake.
+[Correct Answer]: c)
+[Explain]: parking brake 使用相同机制，因此效果一致下降。
+[Reference]: DCV – Brake Adjustment
+
+#R15-29 The “Truck Stop-Check Brakes” sign in advance of a steep grade is:
+
+a) A warning.
+b) A regulation.
+c) Information.
+d) Both a. and c.
+[Correct Answer]: b)
+[Explain]: 属于 regulatory sign（必须遵守）。
+[Reference]: DCV – Road Signs
+
+#R15-30 Spring brakes are most effective as?
+
+a) A parking brake
+b) An emergency braking system when the main reservoir air is depleted
+c) A means to increase braking effort with heavy loads
+d) A fail safe if you miss the runaway lane
+[Correct Answer]: a)
+[Explain]: spring brakes 主要用途是 parking。
+[Reference]: DCV – Spring Brakes
+
+#R16-01 Blended air is air from:
+
+a) The compressor to the wet tank.
+b) The foot valve.
+c) Air from both primary and secondary circuits through a 2-way check valve.
+d) Air from both the tractor and trailer combined in the check valve.
+[Correct Answer]: c)
+[Explain]: Blended air（混合气）指来自 primary circuit（主回路）和 secondary circuit（副回路）的空气，经 2-way check valve（双向止回阀）汇合后输出。这样做的目的，是在一个回路压力较低或失效时，系统仍可能从另一回路获得可用 air supply（气源），从而维持 braking control（制动控制）的连续性。
+[Reference]: DCV – Dual Air Systems / Check Valves
+
+#R16-02 If the trailer breaks away from the tractor, the trailer will immediately dynamite, and air loss from the tractor must not drain below
+
+a) 60 to 50 PSI
+b) 85 to 80 PSI
+c) 45 to 20 PSI
+d) 125 to 105 PSI
+[Correct Answer]: c)
+[Explain]: 当 trailer breaks away（挂车脱离）时，挂车制动会立即进入 emergency application（紧急施加），也就是题目中的 dynamite。与此同时，tractor protection system（牵引车保护系统）必须切断失压路径，防止 tractor（牵引车）本身 reservoir pressure（储气压力）继续流失。题库给出的保护区间是 45 to 20 PSI。
+[Reference]: DCV – Tractor Protection System
+
+#R16-03 The purpose of making a full brake application with the engine turned off is to?
+
+a) Check the function of the anti-compounding valve
+b) Check the governor cut-in pressure
+c) Check the emergency relay valve
+d) Check that major leaks are not present in the system
+[Correct Answer]: d)
+[Explain]: 在 engine turned off（发动机关闭）的状态下做 full brake application（完全制动施加），可以观察 system pressure drop（系统压力下降）是否过快。这一步的核心目的是检查 major leaks（重大漏气）是否存在，因为此时 compressor（压缩机）不会补气，任何异常 pressure loss（压力损失）都会更容易被发现。
+[Reference]: DCV – Air Brake Pre-trip Inspection
+
+#R16-04 Before checking and adjusting the brakes?
+
+a) System air pressure should be 60 psi
+b) Wheels should be blocked
+c) The spring brakes should be applied
+d) System air should be between 20 psi and 45 psi
+[Correct Answer]: b)
+[Explain]: 在检查和调整 brakes（制动）之前，最重要的前提是防止 vehicle movement（车辆移动）。因此 wheels should be blocked（车轮必须被挡住）是首要安全条件。无论系统压力是多少，若没有先 block wheels（挡轮），都可能在调整过程中发生滑动或溜车风险。
+[Reference]: DCV – Brake Adjustment Safety
+
+#R16-05 To “tug test” the trailer service brake operation:
+
+a) The foot valve should be applied.
+b) The hand valve should be applied.
+c) The parking brake should be applied.
+d) The spring brake should be applied.
+[Correct Answer]: b)
+[Explain]: Tug test（牵引测试）是用 very slight power（轻微驱动力）去验证某一制动系统是否能 hold（保持住车辆）。如果要单独测试 trailer service brake operation（挂车行车制动），应使用 hand valve（手控阀）来单独向 trailer service line（挂车行车制动线）施加压力，而不是用 foot valve 同时控制整车。
+[Reference]: DCV – Hand Valve / Trailer Brake Test
+
+#R16-06 The most common cause of loss of air between the tractor and trailer is:
+
+a) Leaking tractor protection valve.
+b) Defective glad hand rubbers.
+c) Leaking relay emergency valve.
+d) Leaking 2-way check valve.
+[Correct Answer]: b)
+[Explain]: Tractor 和 trailer 之间最常见的 air loss（漏气）位置，是 glad hand rubbers（气管接头橡胶密封）。因为它们位于连接点，频繁接拆、暴露在 dirt（灰尘）、grit（砂粒）和磨损环境中，最容易出现 sealing failure（密封失效）。
+[Reference]: DCV – Tractor-Trailer Connections
+
+#R16-07 The brakes should be adjusted when?
+
+a) The low air warning buzzers sounds on a full application
+b) The reservoir drops more than 12 psi with a full application
+c) A pre-trip inspection indicates that the push-rod travel exceeds allowable limits
+d) The governor puts the compressor in the unload stage
+[Correct Answer]: c)
+[Explain]: Brakes should be adjusted（应进行制动调整）的最直接依据，是在 pre-trip inspection（出车前检查）中发现 push-rod travel（推杆行程）超过 allowable limits（允许范围）。这说明 brake adjustment（制动调整）已经不合格，会降低 braking efficiency（制动效率）甚至造成制动失效风险。
+[Reference]: DCV – Foundation Brakes / Push Rod Travel
+
+#R16-08 The main purpose of a hand valve is:
+
+a) To control independently the amount of air to the trailer brakes.
+b) To control the amount of air application to the tractor brakes.
+c) To use as an emergency brake if the foot valve fails.
+d) To control the amount of air application to the treadle valve.
+[Correct Answer]: a)
+[Explain]: Hand valve（手控阀）的主要用途，是 independently control（独立控制）trailer brakes（挂车制动）的空气施加量。它不是设计来控制 tractor brakes（牵引车制动），也不是作为 foot valve 故障时的正式 emergency brake（紧急制动）替代。
+[Reference]: DCV – Hand Valve
+
+#R16-09 If you are adjusting an automatic slack adjuster that has a square head adjusting bolt, you must rotate the adjusting bolt in which direction?
+
+a) Clockwise.
+b) Counter-clockwise.
+c) Up.
+d) Down.
+[Correct Answer]: b)
+[Explain]: 对于题目中所说 square head adjusting bolt（方头调整螺栓）的 automatic slack adjuster（自动间隙调节器），正确调整方向是 counter-clockwise（逆时针）。这类题考的是 specific hardware orientation（具体硬件方向），不是一般原理题，因此必须记住题库答案对应的具体方向。
+[Reference]: DCV – Slack Adjuster Adjustment
+
+#R16-10 When checking the push rod travel during a pre-trip inspection, the brakes need to be adjusted if the travel exceeds:
+
+a) 1/2 inch.
+b) 1 inch.
+c) 1 1/4 inch.
+d) 3/4 inch.
+[Correct Answer]: d)
+[Explain]: 这题考的是 pre-trip inspection 中用特定方法检查 push rod travel（推杆行程）时的 adjustment limit（调整限值）。当 travel exceeds（超过）3/4 inch，就表示 brake is out of adjustment（制动失调），需要调整。
+[Reference]: DCV – Slack Adjuster / Pre-trip Limits
+
+#R16-11 What is total stopping distance?
+
+a) Total braking distance and brake lag distance
+b) Total reaction distance, brake lag distance and braking distance
+c) Total brake lag distance and reaction distance
+d) Distance it takes to stop in slick road conditions
+[Correct Answer]: b)
+[Explain]: Total stopping distance（总停车距离）由三个部分组成：reaction distance（反应距离）、brake lag distance（制动迟滞距离）和 braking distance（制动距离）。题目考查的是完整构成，而不是其中两部分的组合。
+[Reference]: DCV – Stopping Distance Components
+
+#R16-12 An application air gauge indicates?
+
+a) The pressure in the primary system
+b) The pressure in the wet tank
+c) The pressure in the anti compounding valve
+d) The approximate pressure in the brake chamber
+[Correct Answer]: d)
+[Explain]: Application air gauge（应用气压表）显示的是 approximate pressure in the brake chamber（制动气室中的大致压力），也就是当前 brake application（制动施加）传递到制动器的空气压力，而不是 reservoir pressure（储气压力）本身。
+[Reference]: DCV – Gauges / Brake Chamber Pressure
+
+#R16-13 When a tractor and trailer are coupled together and a 30 PSI foot valve application is made, a greater air application to the trailer brakes can be made by use of the:
+
+a) Hand valve.
+b) Safety valve.
+c) Foot valve.
+d) Trailer relay valve.
+[Correct Answer]: a)
+[Explain]: 当 tractor and trailer are coupled（牵引车与挂车已连接）时，如果已经有 30 PSI foot valve application，但还想让 trailer brakes（挂车制动）得到更高的施加压力，可以通过 hand valve（手控阀）单独增加 trailer service application。题目考的是 hand valve 的独立控制特性。
+[Reference]: DCV – Hand Valve / Trailer Brake Control
+
+#R16-14 The purpose of a relay valve is to:
+
+a) Charge the trailer reservoir with main reservoir air.
+b) Provide a quicker application and release of the brakes.
+c) Provide a means of releasing the spring brakes in an emergency situation, when reservoir pressure has dropped.
+d) Gauge the air pressure in the reservoir.
+[Correct Answer]: b)
+[Explain]: Relay valve（继动阀）的主要作用，是缩短 air travel path（空气传输路径），从而 provide a quicker application and release（更快地施加与释放制动）。它的核心价值在于 reduce brake lag（减少制动迟滞），尤其适用于距离 foot valve 较远的 axle brakes（车轴制动）。
+[Reference]: DCV – Relay Valve / Brake Lag
+
+#R16-15 With tractor and trailer coupled, the air pressure present in the service line is:
+
+a) 60 PSI.
+b) The pressure in the reservoir.
+c) The pressure applied by the hand valve or foot valve.
+d) The treadle pressure.
+[Correct Answer]: c)
+[Explain]: Service line（行车制动线）中的 air pressure 不是固定值，也不是 reservoir 全压，而是由 hand valve 或 foot valve 当前施加的 control pressure（控制压力）决定。也就是说，service line pressure 随 driver brake input（驾驶员制动输入）变化。
+[Reference]: DCV – Service Line / Brake Application
+
+#R16-16 At what RPM is the engine set when performing the air pre-trip inspection?
+
+a) 600 RPM to 900 RPM
+b) 1500 RPM to 2000 RPM
+c) 800 RPM to 1400 RPM
+d) 1000 RPM to 1300 RPM
+[Correct Answer]: d)
+[Explain]: 在 air pre-trip inspection（气刹预检）中，为了测试 compressor build-up performance（压缩机建压性能），engine 通常需要保持在一个 elevated idle（较高怠速）范围。题库给出的标准是 1000 RPM to 1300 RPM。
+[Reference]: DCV – Air Brake Pre-trip Inspection / Build-up Test
+
+#R16-17 How are the service brakes tested to ensure that they are working properly?
+
+a) On back roads away from other traffic
+b) Pump the brake pedal and read the gauges
+c) Drive slowly forward and apply the brakes
+d) Drive slowly when first entering traffic
+[Correct Answer]: c)
+[Explain]: 要确认 service brakes（行车制动）是否 working properly（工作正常），应在安全条件下 drive slowly forward（慢速前进）并实际 apply the brakes（施加制动）。这属于动态功能测试，能直接感受 braking response（制动反应）是否正常。
+[Reference]: DCV – Service Brake Test
+
+#R16-18 If the trailer breaks away from the tractor, the trailer brakes would be activated by the action of:
+
+a) The tractor protection valve.
+b) The highway valve.
+c) The check valve.
+d) The trailer relay valve.
+[Correct Answer]: d)
+[Explain]: 当 trailer breaks away 时，trailer brakes 的紧急施加依赖 trailer relay valve / relay emergency valve 的动作。它会感知供气异常并使 trailer emergency braking 生效。题库答案指定为 trailer relay valve。
+[Reference]: DCV – Trailer Relay Emergency Valve
+
+#R16-19 If you make a full brake application (spring brakes released), push rod travel must not exceed:
+
+a) 2 1/4 inches.
+b) the speed limit.
+c) 1 1/2 inches
+d) 1 3/4 inches.
+[Correct Answer]: d)
+[Explain]: 这题考的是 applied stroke limit（施压行程上限）。在 spring brakes released（弹簧制动释放）的情况下做 full brake application，push rod travel 不应超过 1 3/4 inches。超过这个范围，说明 brake is out of adjustment。
+[Reference]: DCV – Push Rod Travel / Applied Stroke
+
+#R16-20 What is stopping distance?
+
+a) Total braking distance and brake lag distance.
+b) Total reaction distance, brake lag distance and braking distance.
+c) Total brake lag distance and reaction distance.
+d) Distance it takes to stop in slick road conditions.
+[Correct Answer]: b)
+[Explain]: 这题中的 stopping distance 与 total stopping distance 逻辑一致，包含 reaction distance、brake lag distance 和 braking distance 三部分。它不是单纯的 braking distance，也不是仅两部分的组合。
+[Reference]: DCV – Stopping Distance
+
+#R16-21 What are foundation brakes?
+
+a) The mechanical part of the brake assembly
+b) The brakes used on tour buses
+c) The brakes found in hydraulic braking systems
+d) The valves that reduce lag
+[Correct Answer]: a)
+[Explain]: Foundation brakes（基础制动器）指 brake assembly 中真正执行机械制动动作的部分，例如 brake chamber 后端所驱动的 slack adjuster、S-cam、brake shoes、lining、drum 等机械组件。它们不是 valves，也不是特定车型专用。
+[Reference]: DCV – Foundation Brakes
+
+#R16-22 When an old, single-circuit trailer is disconnected and left parked, you must:
+
+a) Make sure the trailer is dynamited.
+b) Block the wheels.
+c) Make sure the brakes are properly adjusted.
+d) Make sure the spring brake is in the correct position.
+[Correct Answer]: b)
+[Explain]: 如果是 old, single-circuit trailer（老式单回路挂车），且 without spring brakes，则在 disconnected and left parked（脱挂并停放）时，必须 block the wheels（挡住车轮）。因为系统气压可能逐渐流失，挂车可能自行移动。
+[Reference]: DCV – Parking Safety / Single-circuit Trailer
+
+#R16-23 What would be indicated if the safety valve blows?
+
+a) The compressor filter may be plugged
+b) The one-way check valve may be faulty
+c) The quick release valve is plugged
+d) The governor may be faulty
+[Correct Answer]: d)
+[Explain]: 如果 safety valve blows（安全阀放气），最直接说明 system pressure 已超过正常控制范围。正常情况下 governor 控制 compressor cut-out pressure，因此 safety valve 动作最可能表示 governor may be faulty（调压器可能故障）。
+[Reference]: DCV – Governor / Safety Valve
+
+#R16-24 Proper air brake adjustment on a vehicle equipped with foundation brakes is determined by?
+
+a) The size of the brake chambers
+b) The length of the slack adjusters
+c) Thickness of brake lining
+d) The brake chamber push rod travel
+[Correct Answer]: d)
+[Explain]: Proper air brake adjustment（正确气刹调整）的判断关键，是 brake chamber push rod travel（制动气室推杆行程）是否在规定范围内。其他因素如 chamber size、slack adjuster length、lining thickness 都不是直接判断 adjustment 是否合格的标准。
+[Reference]: DCV – Foundation Brakes / Push Rod Travel
+
+#R16-25 In the event of loss of air in one circuit of the dual braking system (tractor with trailer attached):
+
+a) The remaining circuit will have full braking capability, so long as the compressor continues to function normally.
+b) The circuit will immediately activate the spring brakes.
+c) Only the trailer brakes will be functional.
+d) Both the tractor and trailer brakes will be functional.
+[Correct Answer]: a)
+[Explain]: Dual braking system（双回路制动系统）的主要优点是 redundancy（冗余）。如果 one circuit 失压，只要 compressor continues to function normally（压缩机仍正常工作），the remaining circuit 仍可提供 full braking capability according to the system design in this question。
+[Reference]: DCV – Dual Air Brake Systems
+
+#R16-26 If the main discharge line between the compressor and the reservoirs ruptured, sudden air loss from the reservoirs would be prevented by the action of:
+
+a) The tractor protection valve.
+b) The emergency valve.
+c) The 1-way check valves.
+d) The glad hand rubbers.
+[Correct Answer]: c)
+[Explain]: Main discharge line rupture（主排气线破裂）可能导致空气从 compressor 一侧大量流失，但 1-way check valves（单向止回阀）会阻止 reservoir air 反向泄回，从而 prevent sudden air loss from the reservoirs（防止储气罐气压突然流失）。
+[Reference]: DCV – One-way Check Valves / Air Supply System
+
+#R16-27 Automatic slack adjusters, when installed:
+
+a) Never need checking.
+b) Should be checked occasionally for correct adjustment.
+c) Should be checked regularly by the mechanic on duty.
+d) Need to be checked regularly to ensure correct adjustment is maintained.
+[Correct Answer]: d)
+[Explain]: Automatic slack adjusters 并不等于“不用检查”。相反，即使已安装 automatic slack adjusters，也 still need to be checked regularly（仍需定期检查），以确保它们 truly maintain correct adjustment（确实维持了正确调整）。
+[Reference]: DCV – Automatic Slack Adjusters / Inspection
+
+#R16-28 How can the holding power of the trailer service brakes be tested?
+
+a) Parking brakes.
+b) Wheel chocks.
+c) Hand valve.
+d) Treadle valve.
+[Correct Answer]: c)
+[Explain]: Trailer service brakes 的 holding power（保持能力）测试，应使用 hand valve（手控阀）单独施加 trailer brakes，再做 tug test 或相关检查。用 foot valve / treadle valve 会同时作用整车，不利于单独判断 trailer side 的性能。
+[Reference]: DCV – Trailer Brake Test / Hand Valve
+
 
 `;
 
 let allQuestions = [];
+let activePool = [];
 let quizQuestions = [];
 let currentIdx = 0;
 let userAnswers = [];
@@ -1891,203 +2205,373 @@ let wrongBank = JSON.parse(localStorage.getItem('airBrakeWrongBank')) || [];
 let timeLeft = 30 * 60;
 let timerInterval = null;
 let isWrongPracticeMode = false;
+const DEFAULT_QUESTION_COUNT = 25;
+const DEFAULT_MINUTES = 30;
+
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function escapeHtml(text) {
+  return String(text ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function stripPrefix(text, label) {
+  const re = new RegExp(`^${label}\s*(?:解释)?\s*[:：]?\s*`, 'i');
+  return text.replace(re, '').trim();
+}
 
 function parseData() {
-    const blocks = rawData.split(/(?=#R\d+-\d+)/).filter(b => b.trim().length > 0);
-    allQuestions = blocks.map((block) => {
-        const lines = block.trim().split('\n');
-        const codeMatch = lines[0].match(/#R\d+-\d+/);
-        const code = codeMatch ? codeMatch[0] : "N/A";
-        const questionText = lines[0].replace(code, "").trim();
-        const options = [];
-        let correctAnswer = "", explain = "", page = "";
-        lines.slice(1).forEach(line => {
-            const l = line.trim();
-            if (/^[a-d]\)/.test(l)) options.push(l);
-            else if (l.includes('[Correct Answer]')) correctAnswer = l.split('：')[1].trim().replace(')', '');
-            else if (l.includes('[Explain]')) explain = l.replace('[Explain] 解释：', '');
-            else if (l.includes('[Page]')) page = l.replace('[Page] 参考手册页码：', '');
-        });
-        return { code, q: questionText, options, ans: correctAnswer, explain, page };
-    });
+  const normalized = rawData.replace(/\r/g, '').trim();
+  const blocks = normalized.split(/(?=^#R\d+-\d+\b)/m).filter(block => block.trim());
+
+  allQuestions = blocks.map((block) => {
+    const lines = block.split('\n').map(line => line.trim());
+    const firstLine = lines[0] || '';
+    const codeMatch = firstLine.match(/^#R\d+-\d+/i);
+    const code = codeMatch ? codeMatch[0] : 'N/A';
+
+    const contentLines = lines.slice(1).filter(line => line.length > 0);
+    const questionLines = [];
+    const options = [];
+    let correctAnswer = '';
+    let explain = '';
+    let reference = '';
+
+    for (const line of contentLines) {
+      if (/^[a-d]\)/i.test(line)) {
+        options.push(line);
+        continue;
+      }
+      if (/^\[Correct Answer\]/i.test(line)) {
+        const match = line.match(/([a-d])\)/i);
+        if (match) correctAnswer = match[1].toLowerCase();
+        continue;
+      }
+      if (/^\[Explain\]/i.test(line)) {
+        explain = stripPrefix(line, '\\[Explain\\]');
+        continue;
+      }
+      if (/^\[(?:Page|Reference)\]/i.test(line)) {
+        reference = line
+          .replace(/^\[Page\]\s*(?:参考手册页码)?\s*[:：]?\s*/i, '')
+          .replace(/^\[Reference\]\s*[:：]?\s*/i, '')
+          .trim();
+        continue;
+      }
+      questionLines.push(line);
+    }
+
+    const questionText = (firstLine.replace(code, '').trim() || questionLines.shift() || '').trim();
+    const extraQuestionText = questionLines.join(' ').trim();
+    const finalQuestion = [questionText, extraQuestionText].filter(Boolean).join(' ').trim();
+
+    return {
+      code,
+      q: finalQuestion,
+      options,
+      ans: correctAnswer,
+      explain,
+      reference
+    };
+  }).filter(q => q.code !== 'N/A' && q.q && q.options.length > 0 && q.ans);
+
+  updateBankInfo();
+}
+
+function getRequestedQuestionCount() {
+  const raw = parseInt(document.getElementById('questionCountInput').value, 10);
+  if (!Number.isFinite(raw) || raw < 1) return DEFAULT_QUESTION_COUNT;
+  return raw;
+}
+
+function buildActivePool() {
+  const filterValue = document.getElementById('filterInput').value.trim().toLowerCase();
+  if (!filterValue) return [...allQuestions];
+
+  return allQuestions.filter(q => {
+    const haystack = [q.code, q.q, q.options.join(' '), q.explain, q.reference].join(' ').toLowerCase();
+    return haystack.includes(filterValue);
+  });
+}
+
+function updateWrongBankCountOnly() {
+  const bankInfoEl = document.getElementById('bankInfo');
+  const currentText = bankInfoEl.innerText;
+  bankInfoEl.innerText = currentText.replace(/Wrong List:\s*\d+/i, `Wrong List: ${wrongBank.length}`);
+}
+
+function updateBankInfo() {
+  const filtered = buildActivePool();
+  const requested = getRequestedQuestionCount();
+  const actual = Math.min(requested, filtered.length || requested);
+  document.getElementById('bankInfo').innerText =
+    `Question Bank: ${filtered.length} available · Current Set: ${actual} · Wrong List: ${wrongBank.length}`;
+}
+
+function applySettings() {
+  updateBankInfo();
+  initQuiz();
+}
+
+function clearSettings() {
+  document.getElementById('filterInput').value = '';
+  document.getElementById('questionCountInput').value = DEFAULT_QUESTION_COUNT;
+  updateBankInfo();
+  initQuiz();
 }
 
 function initQuiz() {
-    isWrongPracticeMode = false;
-    quizQuestions = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 25);
-    document.getElementById('modeDisplay').innerHTML = 'Mock Exam';
-    document.getElementById('timerDisplay').style.display = 'inline';
-    startSession();
+  isWrongPracticeMode = false;
+  activePool = buildActivePool();
+  if (activePool.length === 0) {
+    alert('No questions match the current filter.');
+    return;
+  }
+
+  const requestedCount = getRequestedQuestionCount();
+  const actualCount = Math.min(requestedCount, activePool.length);
+  quizQuestions = shuffle(activePool).slice(0, actualCount);
+  document.getElementById('timerDisplay').style.display = 'block';
+  startSession();
 }
 
 function startSession() {
-    currentIdx = 0; userAnswers = [];
-    document.getElementById('quizContainer').style.display = 'block';
-    document.getElementById('resultScreen').style.display = 'none';
-    document.getElementById('reviewScreen').style.display = 'none';
-    document.getElementById('wrongBankScreen').style.display = 'none';
-    document.getElementById('controlPanel').style.display = 'flex';
-    if (!isWrongPracticeMode) startTimer();
-    renderQuestion();
+  currentIdx = 0;
+  userAnswers = [];
+  document.getElementById('quizContainer').style.display = 'block';
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('reviewScreen').style.display = 'none';
+  document.getElementById('wrongBankScreen').style.display = 'none';
+  document.getElementById('controlPanel').style.display = 'flex';
+
+  if (!isWrongPracticeMode) startTimer();
+  else clearInterval(timerInterval);
+
+  renderQuestion();
+  updateBankInfo();
 }
 
 function startTimer() {
-    clearInterval(timerInterval);
-    timeLeft = 30 * 60;
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        const mins = Math.floor(timeLeft / 60);
-        const secs = timeLeft % 60;
-        document.getElementById('timerDisplay').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        if (timeLeft <= 0) { clearInterval(timerInterval); finishQuiz(); }
-    }, 1000);
+  clearInterval(timerInterval);
+  timeLeft = DEFAULT_MINUTES * 60;
+  document.getElementById('timerDisplay').innerText = '30:00';
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    const mins = Math.floor(timeLeft / 60);
+    const secs = timeLeft % 60;
+    document.getElementById('timerDisplay').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      finishQuiz();
+    }
+  }, 1000);
 }
 
 function renderQuestion() {
-    const q = quizQuestions[currentIdx];
-    document.getElementById('questionCounter').innerText = `Question ${currentIdx + 1} / ${quizQuestions.length}`;
-    document.getElementById('qCodeDisplay').innerText = `ID: ${q.code}`;
-    
-    let html = `
-        <div class="question-text">${q.q}</div>
-        <ul class="options">
-            ${q.options.map(opt => `<li class="option-item" onclick="checkAnswer('${opt.charAt(0)}', this)">${opt}</li>`).join('')}
-        </ul>
-        <div id="feedbackArea" class="feedback-panel">
-            <div id="feedbackTitle" style="font-weight:700; font-size:1.1rem; margin-bottom:8px;"></div>
-            <span class="feedback-label">Explanation</span>
-            <div class="feedback-content">${q.explain}</div>
-            <span class="feedback-label">Manual Reference</span>
-            <div class="feedback-content">Page ${q.page}</div>
-        </div>
-    `;
-    document.getElementById('questionArea').innerHTML = html;
-    document.getElementById('btnSkip').style.display = isWrongPracticeMode ? 'none' : 'inline-block';
-    document.getElementById('btnNext').style.display = 'none';
+  const q = quizQuestions[currentIdx];
+  document.getElementById('questionCounter').innerText = `Question ${currentIdx + 1} / ${quizQuestions.length}`;
+  document.getElementById('qCodeDisplay').innerText = `ID: ${q.code}`;
+
+  const html = `
+    <div class="question-text">${escapeHtml(q.q)}</div>
+    <ul class="options">
+      ${q.options.map(opt => `<li class="option-item" onclick="checkAnswer('${opt.charAt(0).toLowerCase()}', this)">${escapeHtml(opt)}</li>`).join('')}
+    </ul>
+    <div id="feedbackArea" class="feedback-panel">
+      <div id="feedbackTitle" style="font-weight:700; font-size:1.1rem; margin-bottom:8px;"></div>
+      <span class="feedback-label">Explanation</span>
+      <div class="feedback-content">${escapeHtml(q.explain || '-')}</div>
+      <span class="feedback-label">Reference</span>
+      <div class="feedback-content">${escapeHtml(q.reference || '-')}</div>
+    </div>
+  `;
+  document.getElementById('questionArea').innerHTML = html;
+  document.getElementById('btnSkip').style.display = isWrongPracticeMode ? 'none' : 'inline-block';
+  document.getElementById('btnNext').style.display = 'none';
+  document.getElementById('btnAddWrong').style.display = 'inline-block';
+}
+
+function addCurrentToWrong() {
+  const q = quizQuestions[currentIdx];
+  if (!q) return;
+
+  if (!wrongBank.some(w => w.code === q.code)) {
+    wrongBank.push(q);
+    saveBank();
+    updateWrongBankCountOnly();
+    alert('Added to Wrong List');
+  } else {
+    alert('Already in Wrong List');
+  }
 }
 
 function checkAnswer(choice, element) {
-    const q = quizQuestions[currentIdx];
-    const isCorrect = choice === q.ans;
-    const items = document.querySelectorAll('.option-item');
-    items.forEach(item => {
-        item.classList.add('disabled');
-        if (item.innerText.startsWith(q.ans)) item.classList.add('correct');
-    });
+  const q = quizQuestions[currentIdx];
+  const isCorrect = choice === q.ans;
+  const items = document.querySelectorAll('.option-item');
 
-    const title = document.getElementById('feedbackTitle');
-    if (!isCorrect) {
-        element.classList.add('wrong');
-        title.innerHTML = `<span style="color:var(--error-text)">✘ Incorrect</span>`;
-        if (!isWrongPracticeMode && !wrongBank.some(w => w.code === q.code)) {
-            wrongBank.push(q); saveBank();
-        }
-    } else {
-        title.innerHTML = `<span style="color:var(--success-text)">✔ Correct</span>`;
+  items.forEach(item => {
+    item.classList.add('disabled');
+    if (item.innerText.trim().toLowerCase().startsWith(q.ans)) item.classList.add('correct');
+  });
+
+  const title = document.getElementById('feedbackTitle');
+  if (!isCorrect) {
+    element.classList.add('wrong');
+    title.innerHTML = `<span style="color:var(--error-text)">✘ Incorrect</span>`;
+    if (!isWrongPracticeMode && !wrongBank.some(w => w.code === q.code)) {
+      wrongBank.push(q);
+      saveBank();
+      updateWrongBankCountOnly();
     }
+  } else {
+    title.innerHTML = `<span style="color:var(--success-text)">✔ Correct</span>`;
+  }
 
-    userAnswers.push({ qIndex: currentIdx, choice, isCorrect });
-    document.getElementById('feedbackArea').style.display = 'block';
-    document.getElementById('btnSkip').style.display = 'none';
-    document.getElementById('btnNext').style.display = 'inline-block';
+  userAnswers.push({ qIndex: currentIdx, choice, isCorrect });
+  document.getElementById('feedbackArea').style.display = 'block';
+  document.getElementById('btnSkip').style.display = 'none';
+  document.getElementById('btnNext').style.display = 'inline-block';
 }
 
 function nextQuestion() {
-    if (currentIdx < quizQuestions.length - 1) {
-        currentIdx++; renderQuestion();
+  if (currentIdx < quizQuestions.length - 1) {
+    currentIdx++;
+    renderQuestion();
+  } else {
+    if (isWrongPracticeMode) {
+      alert('Practice complete.');
+      showWrongBank();
     } else {
-        if (isWrongPracticeMode) {
-            alert("Practice complete.");
-            showWrongBank();
-        } else { finishQuiz(); }
+      finishQuiz();
     }
+  }
 }
 
 function finishQuiz() {
-    clearInterval(timerInterval);
-    document.getElementById('quizContainer').style.display = 'none';
-    document.getElementById('controlPanel').style.display = 'none';
-    document.getElementById('resultScreen').style.display = 'block';
-    const correctCount = userAnswers.filter(a => a.isCorrect).length;
-    const score = correctCount * 4;
-    document.getElementById('scoreStatus').innerText = score >= 80 ? "PASS" : "FAIL";
-    document.getElementById('scoreStatus').style.color = score >= 80 ? "var(--success-text)" : "var(--error-text)";
-    document.getElementById('scoreDetail').innerText = `Your score is ${score}%. (${correctCount} out of 25)`;
+  clearInterval(timerInterval);
+  document.getElementById('quizContainer').style.display = 'none';
+  document.getElementById('controlPanel').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'block';
+
+  const correctCount = userAnswers.filter(a => a.isCorrect).length;
+  const totalCount = quizQuestions.length;
+  const score = totalCount ? Math.round((correctCount / totalCount) * 100) : 0;
+
+  document.getElementById('scoreStatus').innerText = score >= 80 ? 'PASS' : 'FAIL';
+  document.getElementById('scoreStatus').style.color = score >= 80 ? 'var(--success-text)' : 'var(--error-text)';
+  document.getElementById('scoreDetail').innerText = `Your score is ${score}%. (${correctCount} out of ${totalCount})`;
 }
 
-// Updated showReview function
 function showReview() {
-    document.getElementById('resultScreen').style.display = 'none';
-    document.getElementById('reviewScreen').style.display = 'block';
-    let html = "";
-    quizQuestions.forEach((q, idx) => {
-        const userAns = userAnswers.find(a => a.qIndex === idx);
-        const correctOptionText = q.options.find(opt => opt.startsWith(q.ans));
-        
-        html += `
-            <div class="review-item">
-                <div class="review-q-text">${idx + 1}. ${q.q}</div>
-                
-                <div class="review-ans-row ${userAns?.isCorrect ? 'review-correct' : 'review-wrong'}">
-                    <strong>Your Answer:</strong> ${userAns ? userAns.choice : 'Skipped'}
-                </div>
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('reviewScreen').style.display = 'block';
 
-                <div class="review-ans-row review-correct">
-                    <strong>Correct Answer:</strong> [${q.ans}] - ${correctOptionText}
-                </div>
+  let html = '';
+  quizQuestions.forEach((q, idx) => {
+    const userAns = userAnswers.find(a => a.qIndex === idx);
+    const correctOptionText = q.options.find(opt => opt.toLowerCase().startsWith(q.ans)) || q.ans;
 
-                <span class="review-meta-label">Explanation</span>
-                <div class="review-meta-content">${q.explain}</div>
+    html += `
+      <div class="review-item">
+        <div class="review-q-text">${idx + 1}. ${escapeHtml(q.q)} <span style="color: var(--text-sub); font-size: 0.85rem;">(${escapeHtml(q.code)})</span></div>
 
-                <span class="review-meta-label">Manual Reference</span>
-                <div class="review-meta-content">Page ${q.page}</div>
-            </div>`;
-    });
-    document.getElementById('reviewList').innerHTML = html;
+        <div class="review-ans-row ${userAns?.isCorrect ? 'review-correct' : 'review-wrong'}">
+          <strong>Your Answer:</strong> ${escapeHtml(userAns ? userAns.choice : 'Skipped')}
+        </div>
+
+        <div class="review-ans-row review-correct">
+          <strong>Correct Answer:</strong> [${escapeHtml(q.ans)}] - ${escapeHtml(correctOptionText)}
+        </div>
+
+        <span class="review-meta-label">Explanation</span>
+        <div class="review-meta-content">${escapeHtml(q.explain || '-')}</div>
+
+        <span class="review-meta-label">Reference</span>
+        <div class="review-meta-content">${escapeHtml(q.reference || '-')}</div>
+      </div>`;
+  });
+
+  document.getElementById('reviewList').innerHTML = html;
 }
 
 function showWrongBank() {
-    document.getElementById('quizContainer').style.display = 'none';
-    document.getElementById('resultScreen').style.display = 'none';
-    document.getElementById('controlPanel').style.display = 'none';
-    document.getElementById('wrongBankScreen').style.display = 'block';
-    let html = "";
-    if (wrongBank.length === 0) {
-        html = "<p style='text-align:center; padding:60px; color:var(--text-sub);'>No incorrect questions recorded yet.</p>";
-    } else {
-        wrongBank.forEach((q, idx) => {
-            html += `
-                <div class="wrong-card">
-                    <div style="font-weight:600; margin-bottom:12px;">${idx+1}. ${q.q}</div>
-                    <div style="font-size:0.85rem; color:var(--success-text); margin-bottom:10px; font-weight:600;">Correct Answer: ${q.ans}</div>
-                    <div style="font-size:0.9rem; padding-top:10px; border-top:1px solid #f1f3f4;">${q.explain}</div>
-                    <button onclick="removeFromBank('${q.code}')" class="btn-ghost" style="margin-top:16px; padding:6px 14px; font-size:0.8rem;">Remove</button>
-                </div>`;
-        });
-    }
-    document.getElementById('wrongBankList').innerHTML = html;
+  document.getElementById('quizContainer').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('controlPanel').style.display = 'none';
+  document.getElementById('reviewScreen').style.display = 'none';
+  document.getElementById('wrongBankScreen').style.display = 'block';
+
+  let html = '';
+  if (wrongBank.length === 0) {
+    html = "<p style='text-align:center; padding:60px; color:var(--text-sub);'>No incorrect questions recorded yet.</p>";
+  } else {
+    wrongBank.forEach((q, idx) => {
+      html += `
+        <div class="wrong-card">
+          <div style="font-weight:600; margin-bottom:12px;">${idx + 1}. ${escapeHtml(q.q)} <span style="color: var(--text-sub); font-size: 0.85rem;">(${escapeHtml(q.code)})</span></div>
+          <div style="font-size:0.85rem; color:var(--success-text); margin-bottom:10px; font-weight:600;">Correct Answer: ${escapeHtml(q.ans)}</div>
+          <div style="font-size:0.9rem; padding-top:10px; border-top:1px solid #f1f3f4;">${escapeHtml(q.explain || '-')}</div>
+          <div style="font-size:0.85rem; color: var(--text-sub); margin-top: 8px;">${escapeHtml(q.reference || '-')}</div>
+          <button onclick="removeFromBank('${escapeHtml(q.code)}')" class="btn-ghost" style="margin-top:16px; padding:6px 14px; font-size:0.8rem;">Remove</button>
+        </div>`;
+    });
+  }
+
+  document.getElementById('wrongBankList').innerHTML = html;
 }
 
 function startWrongPractice() {
-    isWrongPracticeMode = true;
-    quizQuestions = [...wrongBank];
-    document.getElementById('modeDisplay').innerHTML = 'Practice Mode';
-    document.getElementById('timerDisplay').style.display = 'none';
-    startSession();
+  if (wrongBank.length === 0) {
+    alert('Wrong List is empty.');
+    return;
+  }
+  isWrongPracticeMode = true;
+  quizQuestions = [...wrongBank];
+  document.getElementById('timerDisplay').style.display = 'none';
+  startSession();
 }
 
 function skipQuestion() {
-    let newQ;
-    do { newQ = allQuestions[Math.floor(Math.random() * allQuestions.length)]; } 
-    while (quizQuestions.some(x => x.code === newQ.code));
-    quizQuestions.splice(currentIdx, 1, newQ);
-    renderQuestion();
+  const current = quizQuestions[currentIdx];
+  const candidates = activePool.filter(q => q.code !== current.code && !quizQuestions.some(x => x.code === q.code));
+  if (candidates.length === 0) {
+    alert('No more replacement questions available in the current filtered bank.');
+    return;
+  }
+  const replacement = candidates[Math.floor(Math.random() * candidates.length)];
+  quizQuestions.splice(currentIdx, 1, replacement);
+  renderQuestion();
 }
 
-function removeFromBank(code) { wrongBank = wrongBank.filter(w => w.code !== code); saveBank(); showWrongBank(); }
-function saveBank() { localStorage.setItem('airBrakeWrongBank', JSON.stringify(wrongBank)); }
-function hideWrongBank() { document.getElementById('wrongBankScreen').style.display = 'none'; startSession(); }
-function restartSim() { if (confirm("Start a new test?")) initQuiz(); }
+function removeFromBank(code) {
+  wrongBank = wrongBank.filter(w => w.code !== code);
+  saveBank();
+  updateBankInfo();
+  showWrongBank();
+}
+
+function saveBank() {
+  localStorage.setItem('airBrakeWrongBank', JSON.stringify(wrongBank));
+}
+
+function hideWrongBank() {
+  document.getElementById('wrongBankScreen').style.display = 'none';
+  startSession();
+}
+
+function restartSim() {
+  if (confirm('Start a new test?')) initQuiz();
+}
+
+document.getElementById('filterInput').addEventListener('input', updateBankInfo);
+document.getElementById('questionCountInput').addEventListener('input', updateBankInfo);
 
 parseData();
 initQuiz();
